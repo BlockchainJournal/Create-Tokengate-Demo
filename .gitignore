@@ -2,6 +2,9 @@
 .idea
 .env
 
+artifacts
+cache
+
 logs
 *.log
 npm-debug.log*

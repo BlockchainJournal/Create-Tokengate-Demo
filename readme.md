@@ -43,6 +43,12 @@ NFT_STORAGE_KEY = <nft.storage API key here>
 
 MORE TO COME
 
+# Compiling the project's smart contract
+
+```bash
+npx hardhat compile
+```
+
 # Confirming the project setup
 
 Run the tests declared in the file `./test/Dilty.js`
