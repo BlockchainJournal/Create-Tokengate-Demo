@@ -33,7 +33,7 @@ npm install
 
 # Setting up the `.env` file
 
-This project requires values that are set as environment variables. You can set the environment at the project level by defining those variables in a `.env` file. The structure of the `.env` file is as follows:
+This project requires values that are set as environment variables. You can set the environment at the project level by defining those variables in a `.env` file in the project's root directory. The structure of the `.env` file is as follows:
 
 ```bash
 INFURA_API_KEY = <Infura key here>
