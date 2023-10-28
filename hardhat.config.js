@@ -14,7 +14,7 @@ if (!process.env.SEPOLIA_PRIVATE_KEY) throw new Error(getErrorMessage('SEPOLIA_P
 const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY
 
 if (!process.env.NFT_STORAGE_KEY) throw new Error(getErrorMessage('NFT_STORAGE_KEY'));
-const NFT_STORAGE_KEY = process.env.NFT_STORAGE
+const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
