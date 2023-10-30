@@ -1,14 +1,25 @@
 const { expect } = require("chai");
+const {deployDiltyContract} = require('../scripts/deploy-dilty')
 const tokenName = "Dilty";
 
-describe(`${tokenName} contract`, function () {
+describe(`${tokenName} contract test`, function () {
   it("Deployment should assign the total supply of tokens to the owner", async function () {
-    const [owner] = await ethers.getSigners();
 
-    const hardhatToken = await ethers.deployContract(tokenName);
+    let contract = await deployDiltyContract();
+    const ownerBalance = await contract.balanceOf(contract.getAddress());
+    expect(await contract.getTotalSupply()).to.equal(ownerBalance);
+    const contractAddress = await contract.getAddress();
+    console.log('Contract address:', contractAddress);
 
-    const ownerBalance = await hardhatToken.balanceOf(owner.address);
-    expect(await hardhatToken.getTotalSupply()).to.equal(ownerBalance);
+    // Get an instance of the deployed contract
+    const contractFactory = await ethers.getContractFactory(tokenName);
+    contract = await contractFactory.attach(contractAddress);
+
+    // Get the owner of the contract
+    const owner = await contract.owner();
+
+    console.log('Contract owner:', owner);
+
   });
 
   it("Can mint and transfer DiLTy", async function () {

@@ -1,16 +1,18 @@
-async function main() {
+/**
+ * Deploys the Dilty contract
+ * @returns {Promise<{address: *}>} The address of the deployed contract
+ */
+async function deployDiltyContract() {
+
     const [deployer] = await ethers.getSigners();
-  
+
     console.log("Deploying contracts with the account:", deployer.address);
-  
-    const token = await ethers.deployContract("Dilty");
-  
-    console.log("Dilty address:", await token.getAddress());
+
+    const contract = await ethers.deployContract("Dilty");
+    console.log("Dilty address:", await contract.getAddress());
+    console.log(`Contract: ${JSON.stringify(contract, null, 2)}`);
+
+    return contract;
   }
-  
-  main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
+
+module.exports = {deployDiltyContract}
