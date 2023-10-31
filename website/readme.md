@@ -24,8 +24,27 @@ This will create the JSON file named `dilty-abi.json` that  describes the contra
 Execute the following command to deploy the contract to the testnet:
 
 ```bash
- npx hardhat run scripts/deploy-dilty.js
+ npx hardhat run scripts/deploy-dilty.js --network <NETWORK_NAME>
 ```
+
+WHERE
+
+`NETWORK-NAME` is the name of the network to which you want to deploy the contract.  For example, `sepolia` or `ropsten`.
+
+Where deploying to Sepolia, make sure that the `sepolia` network is defined in the file `hardhat.config.js` as follows:
+
+```javascript
+// hardhat.config.js
+module.exports = {
+    networks: {
+        sepolia: {
+            url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+            accounts: [${SEPOLIA_PRIVATE_KEY}]
+        }
+    }
+};
+```
+
 
 You'll see output similar to the following:
 
