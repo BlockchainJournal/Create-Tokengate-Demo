@@ -15,4 +15,4 @@ async function deployDiltyContract() {
     return contract;
   }
 
-module.exports = {deployDiltyContract}
+deployDiltyContract();

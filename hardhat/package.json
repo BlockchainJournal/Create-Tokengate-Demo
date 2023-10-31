@@ -1,7 +1,7 @@
 {
-  "name": "Token Gating Demonstration",
+  "name": "Token Gating Demonstration -  HardHat",
   "version": "1.0.0",
-  "description": "A project that demonstrates how to implement token gating on an EVM compatible.",
+  "description": "Contract management portion of a project that demonstrates how to implement token gating on an EVM compatible.",
   "main": "index.js",
   "scripts": {
     "test": "npx hardhat test"
@@ -14,8 +14,13 @@
     "hardhat": "^2.18.3"
   },
   "dependencies": {
+    "@metamask/eth-sig-util": "^7.0.0",
     "@openzeppelin/contracts": "^5.0.0",
+    "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
+    "ethereumjs-util": "^7.1.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "nft.storage": "^7.1.1",
     "web3": "^4.2.1"
   }

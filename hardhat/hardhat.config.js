@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
-require('dotenv').config()
+const {join} = require("path");
+require('dotenv').config();
 
 const getErrorMessage = (envVarName) => {
     return `Required environment variable ${envVarName} is missing`

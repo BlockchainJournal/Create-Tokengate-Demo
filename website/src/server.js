@@ -5,9 +5,11 @@ const sigUtil = require('@metamask/eth-sig-util');
 const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-
+const {getEnvVars} = require('./lib/helpers');
+const {join} = require("path");
 app.use(bodyParser.json());
-
+const dotenv = require('dotenv');
+dotenv.config({ debug: true });
 // Replace this with your own secret key (used to sign JWT tokens)
 const secretKey = 'w87LqcTUMeA7U8v@#yEEZX2KfH@G9mWxxx';
 
@@ -170,6 +172,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+// Define a route to serve the 'index.html' file
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+    const vars = getEnvVars();
+    console.log(vars);
+});
+
 
 const PORT = process.env.PORT || 3111;
 app.listen(PORT, () => {

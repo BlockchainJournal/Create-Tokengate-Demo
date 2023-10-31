@@ -19,4 +19,6 @@ async function uploadDiltyPng() {
     console.log('Metadata stored successfully:', metaData);
     return metaData;
 }
+
+uploadDiltyPng()
 module.exports = {uploadDiltyPng};

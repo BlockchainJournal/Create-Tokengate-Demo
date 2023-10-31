@@ -1,7 +1,6 @@
-const {artifacts} = require("hardhat");
-const Web3 = require('web3');
 let loginToken = '';
 let profile = {};
+
 
 const setLoginToken = (token) => {loginToken = token;}
 const getLoginToken = () => {return loginToken}
@@ -142,28 +141,4 @@ function readOnlyProfileUI() {
 
     document.getElementById('email').readOnly = true;
     document.getElementById('email').classList.add('readonly');
-}
-
-async function extractABI(contractName) {
-    // Compile the smart contract (if not already done)
-    if (!artifacts.readArtifactSync(contractName)) {
-        await run('compile');
-    }
-
-    // Access the contract's ABI
-    const contractArtifact = await artifacts.readArtifact(contractName);
-    const abi = contractArtifact.abi;
-
-    return abi;
-}
-
-async function verifyTokenOwnership(web3, tokenAddress, accountAddress, tokenAbi) {
-    // Get the token contract instance.
-    const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
-
-    // Get the token balance of the account address.
-    const tokenBalance = await tokenContract.methods.balanceOf(accountAddress).call();
-
-    // If the token balance is greater than zero, then the account address owns the token.
-    return tokenBalance > 0;
 }
