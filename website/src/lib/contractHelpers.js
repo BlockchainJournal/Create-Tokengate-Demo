@@ -1,32 +1,53 @@
 const Web3 = require("web3");
 const axios = require('axios');
 const {join} = require('path');
-
+const web3 = new Web3('YOUR_ETHEREUM_NODE_URL');
+const fs = require('fs');
 
 async function getEnvVars(){
     join(__dirname, '../.env')
     return process.env;
 }
 
+async function getAbi(){
+    const filePath = join(__dirname, '../website/src/contracts', 'dilty-abi.json');
+    let abi;
 
-async function verifyTokenOwnership(web3, tokenAddress, accountAddress, tokenAbi) {
-    // Get the token contract instance.
-    const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
+    try {
+        if (fs.existsSync(filePath)) {
+            abi = JSON.parse(fs.readFileSync(filePath));
+        } else {
+            console.error(`File ${filePath} does not exist.`);
+        }
+    } catch (err) {
+        console.error('Error reading or parsing the file:', err);
+    }
 
-    // Get the token balance of the account address.
-    const tokenBalance = await tokenContract.methods.balanceOf(accountAddress).call();
-
-    // If the token balance is greater than zero, then the account address owns the token.
-    return tokenBalance > 0;
+    return abi;
 }
 
-async function mintAndTransfer() {
-// Initialize a Web3 instance connected to your Ethereum provider (e.g., Infura, local node, etc.)
-    const web3 = new Web3('YOUR_ETHEREUM_PROVIDER_URL');
+
+async function verifyTokenOwnership(tokenAddress, userAddress, tokenId, tokenAbi) {
+    const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
+
+    try {
+        const owner = await tokenContract.methods.ownerOf(tokenId).call();
+        if (owner.toLowerCase() === userAddress.toLowerCase()) {
+            console.log(`Token ID ${tokenId} is owned by address ${userAddress}`);
+        } else {
+            console.log(`Token ID ${tokenId} is NOT owned by address ${userAddress}`);
+        }
+    } catch (error) {
+        console.error('Error checking ownership:', error);
+    }
+}
+
+async function mintAndTransfer(recipientAddress) {
+;
 
 // Replace these with your contract's ABI and address
     const contractABI = [
-        // Include the ABI of your contract here
+        getAbi()
     ];
     const contractAddress = 'YOUR_CONTRACT_ADDRESS';
 
@@ -39,7 +60,7 @@ async function mintAndTransfer() {
 
 // Token URI and recipient address
     const tokenURI = 'ipfs://bafyreicr7m3girs3gmvrm6qyxrn6bpcre5yfm3nkq34xxfypajoua3f4qm/metadata.json'; // Replace with the actual token URI
-    const recipientAddress = '0xADeB8052682aeF1A7B127fC158fAdEd08a19A843'; // Replace with the recipient's address
+    //const recipientAddress = '0xADeB8052682aeF1A7B127fC158fAdEd08a19A843'; // Replace with the recipient's address
 
 // Encode the function call (data) to call mintAndTransferSuperDiltyNFT
     const functionData = contract.methods.mintAndTransferSuperDiltyNFT(tokenURI, recipientAddress).encodeABI();

@@ -2,6 +2,7 @@
 .idea
 hardhat/.env
 website/src/.env
+website/src/contracts/
 
 artifacts
 cache
