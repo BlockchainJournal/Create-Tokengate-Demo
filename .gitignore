@@ -1,6 +1,7 @@
 # Logs
 .idea
 hardhat/.env
+hardhat/scripts/dilty-abi.json
 website/src/.env
 website/src/contracts/
 

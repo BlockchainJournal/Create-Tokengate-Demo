@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Dilty is ERC721URIStorage, Ownable {
     uint256 private totalSupply;
     mapping(address => uint256) addressTokenIds;
-
+    uint256 private nextTokenId = 0;
     event Minting(string tokenURI, uint256 tokenId);
 
     constructor() ERC721("Blockchain Journal DiLTy", "BCJDLT") Ownable(msg.sender) {}
@@ -33,34 +33,18 @@ contract Dilty is ERC721URIStorage, Ownable {
         return tokenId;
     }
 
-    /*
-      This  method is idempotent. If the _to address already has
-      a tokenId, then that tokenId will be returned
-      */
-    function mintAndTransferSuperDiltyNFT(string calldata _tokenURI, address _to) public returns (uint256) {
-        // If the address has a token, then exit the function returning
-        // the token address
-        if (addressTokenIds[_to] != 0) return addressTokenIds[_to];
-
-        uint256 tokenId = mint(_tokenURI);
-        uint256 result;
-        bool success = this.transfer(_to);
-        if (success) {
-            setAddressTokenId(_to, tokenId);
-            result = tokenId;
-        } else {
-            result = 0;
-        }
-        return result;
-    }
 
     function transfer(address _to) external onlyOwner returns (bool) {
+        //check if the address already has a token
+        if(getAddressTokenId(_to) != 0) {
+            return false;
+        }
         uint256 amount = 1;
         require(totalSupply >= amount, "Not enough tokens");
-
-        // Notify off-chain applications of the transfer.
-        emit Transfer(msg.sender, _to, amount);
-
+        nextTokenId++;
+        //if not, then transfer the token to the new address
+        _transfer(msg.sender, _to, nextTokenId);
+        setAddressTokenId(_to, nextTokenId);
         return true;
     }
 
