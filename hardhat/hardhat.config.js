@@ -1,6 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 const {join} = require("path");
 require('dotenv').config();
+const { AlchemyProvider } = require('ethers');
 
 const getErrorMessage = (envVarName) => {
     return `Required environment variable ${envVarName} is missing`
@@ -12,21 +13,32 @@ if (!process.env.INFURA_API_KEY) throw new Error(getErrorMessage('INFURA_API_KEY
 const INFURA_API_KEY = process.env.INFURA_API_KEY;
 
 if (!process.env.SEPOLIA_PRIVATE_KEY) throw new Error(getErrorMessage('SEPOLIA_PRIVATE_KEY'));
-const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY
+
+
+if (!process.env.ALCHEMY_API_KEY)throw new Error(getErrorMessage('ALCHEMY_API_KEY'));
+
 
 if (!process.env.NFT_STORAGE_KEY) throw new Error(getErrorMessage('NFT_STORAGE_KEY'));
-const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY
+//const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  nftStorageKey: `${NFT_STORAGE_KEY}`,
-  infuraApiKey: `${INFURA_API_KEY}`,
-  infuraUrl: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-    solidity: "0.8.20",
-    networks: {
-      sepolia: {
-        url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-        accounts: [SEPOLIA_PRIVATE_KEY]
+  privateKey: `${process.env.SEPOLIA_PRIVATE_KEY}`,
+  nftStorageKey: `${process.env.NFT_STORAGE_KEY}`,
+  infuraApiKey: `${process.env.INFURA_API_KEY}`,
+  infuraUrl: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  solidity: "0.8.20",
+  networks: {
+    alchemy: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      },
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+      accounts: [process.env.SEPOLIA_PRIVATE_KEY],
+      provider: new AlchemyProvider('sepolia', process.env.ALCHEMY_API_KEY),
+      },
+    hardhat: {
+      runner: 'HardhatNetworkRunner',
       }
     }
   };

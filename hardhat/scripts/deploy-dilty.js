@@ -9,7 +9,7 @@ async function deployDiltyContract() {
 
     const [deployer] = await ethers.getSigners();
 
-    console.log("Deploying contracts with the account:", deployer.address);
+    //console.log("Deploying contracts with the account:", deployer.address);
 
     const contract = await ethers.deployContract("Dilty");
     console.log("Dilty address:", await contract.getAddress());

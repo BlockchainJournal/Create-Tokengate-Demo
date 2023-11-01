@@ -32,6 +32,19 @@ async function main() {
 
   // Output the ABI to the console
   console.log(JSON.stringify(tokenABI, null, 2));
+
+  // Destination file path
+  const destinationFilePath = './scripts/dilty-abi.json';
+
+// Copy the file
+  fs.copyFile(filePath, destinationFilePath, (err) => {
+    if (err) {
+      console.error('Error copying the file:', err);
+    } else {
+      console.log('File copied successfully!');
+    }
+  });
+
 }
 
 main();

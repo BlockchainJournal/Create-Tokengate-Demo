@@ -7,6 +7,19 @@ const getLoginToken = () => {return loginToken}
 const setProfile = (profile) => {profile = profile;}
 const getProfile = () => {return profile;}
 
+async function getUserAddressFromMetaMask() {
+    if (typeof window.ethereum !== 'undefined') {
+        // retrieve the accounts known to the MetaMask plugin ...
+        const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+        // ... and choose the first one
+        const address = accounts[0];
+        alert(address)
+        await processGatingData(address)
+    }else{
+        alert("MetaMask is not installed or not connected.");
+    }
+}
+
 // Function to initiate the MetaMask login process
 async function loginWithMetaMask() {
     try {
@@ -84,6 +97,34 @@ function generateRandomHexNonce(length) {
 
     return '0x' + hexNonce;
 }
+
+async function processGatingData(ownerAddress) {
+    // Access form data
+    const formData = {
+        ownerAddress: ownerAddress,
+        recipientAddress: document.getElementById('recipientAddress').value,
+
+    };
+    const apiUrl = '/admin';
+    // Perform the HTTP POST request using the Fetch API
+    try {
+        const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${getLoginToken()}`
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const responseData = await res.json();
+        const result = JSON.parse(responseData.message);
+        if (res.status === 200 || res.status === 201) document.getElementById("gatingResponse").innerText = `Token Gating in force for address:  ${result.recipientAddress}`
+    } catch (error) {
+        document.getElementById("gatingResponse").innerText = `${error.message}`
+    }
+}
+
 
 async function processProfileData() {
     // Access form data

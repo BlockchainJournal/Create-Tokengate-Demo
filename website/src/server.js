@@ -5,7 +5,7 @@ const sigUtil = require('@metamask/eth-sig-util');
 const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const {getEnvVars} = require('./lib/helpers');
+const {getEnvVars, mintAndTransfer} = require('./lib/contractHelpers');
 const {join} = require("path");
 app.use(bodyParser.json());
 const dotenv = require('dotenv');
@@ -176,10 +176,16 @@ app.get('/', (req, res) => {
 // Define a route to serve the 'index.html' file
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-    const vars = getEnvVars();
-    console.log(vars);
 });
 
+// Define a route to serve the 'index.html' file
+app.post('/admin', async (req, res) => {
+    // Do the token transfer against the EVM blockchain
+    const result = await mintAndTransfer(req.body.recipientAddress)
+    console.log(req.body);
+    return res.status(200).json({message: JSON.stringify(req.body, null, 2)});
+
+});
 
 const PORT = process.env.PORT || 3111;
 app.listen(PORT, () => {

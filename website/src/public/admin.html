@@ -2,9 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Gating Admin</title>
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+        div {
+            margin: 20px;
+        }
+
+        #recipientAddress {
+            width: 500px;
+        }
+    </style>
 </head>
 <body>
-I am admin
+<h1>Token Gating Admin</h1>
+<hr/>
+<div>The purpose of this page is to allow the owner of the Gating Token to mint a token for the recipient address that will be declared below.
+The token will be minted with a unique TokenId.
+</div>
+<div>Address of recipient to token gate:</div>
+<div id="addressHolder">
+    <input type="text" id="recipientAddress" name="recipientAddress" required>
+</div>
+<div id="buttonHolder">
+    <button id="gatingButton">Create Gating Token</button>
+</div>
+<hr/>
+<div id="gatingResponse"></div>
 </body>
+<script src="functions.js"></script>
+<script>
+    document.getElementById('gatingButton').addEventListener('click', getUserAddressFromMetaMask);
+</script>
 </html>
+
+

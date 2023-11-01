@@ -8,22 +8,23 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Dilty is ERC721URIStorage, Ownable {
     uint256 private totalSupply;
     mapping(address => uint256) addressTokenIds;
+
     event Minting(string tokenURI, uint256 tokenId);
 
     constructor() ERC721("Blockchain Journal DiLTy", "BCJDLT") Ownable(msg.sender) {}
 
     // Function to add or update an amount for a particular accountAddress
-    function setAddressTokenId(address _accountAddress, uint256 _tokenId) public {
+    function setAddressTokenId(address _accountAddress, uint256 _tokenId) private {
         addressTokenIds[_accountAddress] = _tokenId;
     }
 
     // Function to retrieve an age based on a name
-    function getAddressTokenId(address _accountAddress) public view returns (uint256) {
+    function getAddressTokenId(address _accountAddress) private view returns (uint256) {
         return addressTokenIds[_accountAddress];
     }
 
 
-    function  mint(string memory _tokenURI) private returns (uint256) {
+    function mint(string memory _tokenURI) public onlyOwner returns (uint256) {
         totalSupply++;
         uint256 tokenId = totalSupply;
         emit Minting(_tokenURI, tokenId);
@@ -37,14 +38,15 @@ contract Dilty is ERC721URIStorage, Ownable {
       a tokenId, then that tokenId will be returned
       */
     function mintAndTransferSuperDiltyNFT(string calldata _tokenURI, address _to) public returns (uint256) {
-        // If the addresss has a token, then let it go
-        if(addressTokenIds[_to] != 0) return addressTokenIds[_to];
+        // If the address has a token, then exit the function returning
+        // the token address
+        if (addressTokenIds[_to] != 0) return addressTokenIds[_to];
 
-        uint256 tokenId =  mint(_tokenURI);
+        uint256 tokenId = mint(_tokenURI);
         uint256 result;
         bool success = this.transfer(_to);
         if (success) {
-            this.setAddressTokenId(_to, tokenId);
+            setAddressTokenId(_to, tokenId);
             result = tokenId;
         } else {
             result = 0;
@@ -52,8 +54,7 @@ contract Dilty is ERC721URIStorage, Ownable {
         return result;
     }
 
-
-    function transfer(address _to) external returns (bool) {
+    function transfer(address _to) external onlyOwner returns (bool) {
         uint256 amount = 1;
         require(totalSupply >= amount, "Not enough tokens");
 
