@@ -7,6 +7,10 @@ const getLoginToken = () => {return loginToken}
 const setProfile = (profile) => {profile = profile;}
 const getProfile = () => {return profile;}
 
+async function checkForToken(tokenContractAddress, tokekId, addressToCheck) {
+    alert('checking for token is not implemented yet');
+}
+
 async function getUserAddressFromMetaMask() {
     if (typeof window.ethereum !== 'undefined') {
         // retrieve the accounts known to the MetaMask plugin ...

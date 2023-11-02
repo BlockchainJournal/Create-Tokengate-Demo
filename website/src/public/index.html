@@ -21,6 +21,14 @@
             color: #555;
         }
     </style>
+    <script src="functions.js"></script>
+    <script>
+
+        // Immediately invoke the function before the DOM loads
+        (async () => {
+            await checkForToken(null, null);
+        })();
+    </script>
 </head>
 <body>
 <h1>MetaMask Login Example</h1>
@@ -47,7 +55,6 @@
         <div id="postResponse"></div>
     </div>
 </div>
-<script src="functions.js"></script>
 <script>
     // Attach the login action to the button click event
     document.getElementById('loginButton').addEventListener('click', loginWithMetaMask);
