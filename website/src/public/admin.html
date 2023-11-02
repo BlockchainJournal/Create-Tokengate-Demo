@@ -16,26 +16,41 @@
         #recipientAddress {
             width: 500px;
         }
+        #adminPane{
+            display: none;
+        }
     </style>
 </head>
 <body>
+<div></div>
 <h1>Token Gating Admin</h1>
 <hr/>
 <div>The purpose of this page is to allow the owner of the Gating Token to mint a token for the recipient address that will be declared below.
 The token will be minted with a unique TokenId.
 </div>
-<div>Address of recipient to token gate:</div>
-<div id="addressHolder">
-    <input type="text" id="recipientAddress" name="recipientAddress" required>
+<div>Admin Password <input type="password" id="adminPwd" required> <button id="loginButton" onclick="loginAdmin()">Login</button></div>
+<div id="adminPane">
+    <div>Admin Account Address: <span id="adminAccountAddress"></span>
+    <hr/>
+    <div>Enter address of recipient to token gate:</div>
+    <div id="addressHolder">
+        <input type="text" id="recipientAddress" name="recipientAddress" required>
+    </div>
+    <div id="buttonHolder">
+        <button id="gatingButton">Create Gating Token</button>
+    </div>
+    <hr/>
+    <div id="gatingResponse"></div>
 </div>
-<div id="buttonHolder">
-    <button id="gatingButton">Create Gating Token</button>
-</div>
-<hr/>
-<div id="gatingResponse"></div>
+
 </body>
 <script src="functions.js"></script>
+<script src="adminFunctions.js"></script>
 <script>
+    window.onload = async function() {
+        document.getElementById('adminAccountAddress').innerText = await getAdminAddress();
+    };
+
     document.getElementById('gatingButton').addEventListener('click', getUserAddressFromMetaMask);
 </script>
 </html>
