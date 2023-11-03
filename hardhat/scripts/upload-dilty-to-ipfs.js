@@ -4,7 +4,7 @@ const {nftStorageKey} = require('../hardhat.config');
 const { NFTStorage, File } = require('nft.storage');
 
 async function uploadDiltyPng() {
-    const filePath = join(__dirname, '../images', 'dilty-icon.png');
+    let filePath = join(__dirname, '../images', 'dilty-icon.png');
     const client = new NFTStorage({token: nftStorageKey});
     const metaData = await client.store({
         name: "Blockchain Journal DiLTy",
@@ -15,8 +15,20 @@ async function uploadDiltyPng() {
         // Additional properties or code
     });
 
+    const directoryPath = '../website/src/contracts/';
+    filePath = join(directoryPath, 'tokenuri-data.json');
+
+
+    // Create the directory if it doesn't exist
+    if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath, { recursive: true });
+    }
+
+    // Write the JSON data to the file
+    fs.writeFileSync(filePath, JSON.stringify(metaData, null, 2));
+
     // Handle the metadata result here if needed
-    console.log('Metadata stored successfully:', metaData);
+    console.log('Metadata stored successfully:', JSON.stringify(metaData, null,2));
     return metaData;
 }
 

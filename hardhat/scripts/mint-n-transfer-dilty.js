@@ -8,8 +8,8 @@ async function mintAndTransferNFT() {
         const contractABI = require("./dilty-abi.json");
 
         const [deployer] = await ethers.getSigners();
-        const contract = new Contract('0x3039Cc64a6157450242B4bC9522Bea2b7D45E359', contractABI, deployer);
-        const TokenURI = "ipfs://bafyreicr7m3girs3gmvrm6qyxrn6bpcre5yfm3nkq34xxfypajoua3f4qm/";
+        const contract = new Contract('0xF2B3cD887A14d3eda09C051e9a52802bC49ACCbe', contractABI, deployer);
+        const TokenURI = "ipfs://bafyreicr7m3girs3gmvrm6qyxrn6bpcre5yfm3nkq34xxfypajoua3f4qm";
 
         const rst = await contract.mint(TokenURI);
 
@@ -18,10 +18,8 @@ async function mintAndTransferNFT() {
         const tokenId = 2;
         const recipientAddress = "0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27";
         // Transfer the ERC-721 token to the recipient
-        const tx = await contract["safeTransferFrom(address,address,uint256)"](
-            deployer.getAddress(),
-            recipientAddress,
-            tokenId
+        const tx = await contract["transfer(address)"](
+            recipientAddress
         );
 
         await tx.wait();

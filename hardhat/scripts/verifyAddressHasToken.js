@@ -26,7 +26,6 @@ async function verifyAddressHasToken() {
     // Use the balanceOf function to check if the account owns the specified token
     const balance = await contract.balanceOf(addressToCheck);
 
-    //console.log(`Balance: ${balance}`);
 
     if (balance === 0) {
         console.log(`Account ${addressToCheck} does not own any tokens.`);

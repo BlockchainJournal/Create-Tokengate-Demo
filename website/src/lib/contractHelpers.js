@@ -1,4 +1,4 @@
-const {Web3} = require("web3");
+const {Web3,ethers} = require("web3");
 const axios = require('axios');
 const {join} = require('path');
 const fs = require('fs');
@@ -6,6 +6,7 @@ const fs = require('fs');
 const envFilePath = join(__dirname, '../.env'); // Replace '.env' with the actual filename if it's different
 
 const dotenv = require('dotenv');
+//const contractABI = require("./dilty-abi.json");
 dotenv.config({ debug: true,path: envFilePath })
 
 if(!process.env.INFURA_API_KEY) throw new Error('Required environment variable INFURA_API_KEY is missing');
@@ -53,71 +54,89 @@ async function getContractAndOwnerAddresses(){
     return addresses;
 }
 
-async function verifyTokenOwnership(tokenAddress, userAddress, tokenId, tokenAbi) {
-    const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
+async function verifyTokenOwnership(contractAddress, userAddress, tokenId){    // Replace with the contract address of the ERC-721 contract
+    const contractABI = await getAbi();
+    // Connect to the ERC-721 contract
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-    try {
-        const owner = await tokenContract.methods.ownerOf(tokenId).call();
-        if (owner.toLowerCase() === userAddress.toLowerCase()) {
-            console.log(`Token ID ${tokenId} is owned by address ${userAddress}`);
-        } else {
-            console.log(`Token ID ${tokenId} is NOT owned by address ${userAddress}`);
-        }
-    } catch (error) {
-        console.error('Error checking ownership:', error);
+    const contractMethods = contract.methods;
+
+    // Use the balanceOf function to check if the account owns the specified token
+    const balance = await contractMethods.balanceOf(userAddress).call();
+
+    if (balance === 0) {
+        console.log(`Account ${userAddress} does not own any tokens.`);
+        return;
     }
+
+    const owner = await contractMethods.ownerOf(tokenId).call();
+
+    if (owner === userAddress) {
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
-async function mintAndTransfer(recipientAddress) {
+async function mintAndTransfer(recipientAddress, tokenUri) {
+    const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
+    const ownerAccount = await web3.eth.accounts.privateKeyToAccount('0x' + privateKey);
+
+    if(!tokenUri) throw new Error('Required parameter tokenUri is missing');
 
     const addresses = await getContractAndOwnerAddresses();
     // Replace these with your contract's ABI and address
     const abi = await getAbi();
 
-    const contractABI = [
-        abi
-    ];
+    const abiFilePath = join(__dirname, '../contracts', 'dilty-abi.json');
+
     const contractAddress = addresses.diltyAddress;
 
-// Create a contract instance
+    const contractABI = require(abiFilePath);
     const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+    const contractMethods = contract.methods;
 
 // Set your sender address (the address from which the transaction will be sent)
     const ownerAddress = addresses.deployerAddress;
-    const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
 
-    const ownerAccount = web3.eth.accounts.privateKeyToAccount('0x' + privateKey);
-// Token URI and recipient address
-    const tokenURI = 'ipfs://bafyreicr7m3girs3gmvrm6qyxrn6bpcre5yfm3nkq34xxfypajoua3f4qm/metadata.json'; // Replace with the actual token URI
 
-// Encode the function call (data) to call mintAndTransferSuperDiltyNFT
-    let functionData;
 
     try {
-        functionData = await contract.methods.mintAndTransferSuperDiltyNFT(tokenURI, recipientAddress).encodeABI();
+        const mintData = contractMethods.mint(tokenUri).encodeABI();
+        const signedTx = await web3.eth.accounts.signTransaction({
+            from: ownerAccount.address,
+            to: contractAddress,
+            value: 0,
+            gas: 22520,
+            gasPrice: 20000000000,
+            data: mintData,
+        }, ownerAccount.privateKey);
+
+        const result = await web3.eth.sendSignedTransaction(signedTx);
+        console.log(JSON.stringify(result, null, 2));
+    } catch (e) {
+        console.error('Error sending the transaction:', e);
+    }
+
+
+// NOW DO THE TRANSFER
+    try {
+        const transferData = contractMethods.mint(recipientAddress).encodeABI();
+        const signedTx = await web3.eth.accounts.signTransaction({
+            from: ownerAccount.address,
+            to: contractAddress,
+            value: 0,
+            gas: 22520,
+            gasPrice: 20000000000,
+            data: transferData,
+        }, ownerAccount.privateKey);
+
+        const result = await web3.eth.sendSignedTransaction(signedTx);
+        console.log(JSON.stringify(result, null, 2));
     } catch (e) {
         console.error('Error encoding function call:', e);
     }
-
-// Create a transaction object
-    const txObject = {
-        from: ownerAccount.address,
-        to: recipientAddress,
-        gas: 200000, // You may need to adjust the gas limit
-        data: functionData,
-    };
-
-// Sign the transaction
-    web3.eth.accounts.signTransaction(txObject, privateKey).then((signedTx) => {
-        // Send the signed transaction
-        web3.eth
-            .sendSignedTransaction(signedTx.rawTransaction)
-            .on('receipt', (receipt) => {
-                return {transactionReceipt: receipt}
-            })
-            .on('error', (error) => {
-                console.error('Transaction error:', error);
-            });
-    });
 }
 module.exports = {verifyTokenOwnership,mintAndTransfer,getEnvVars}
