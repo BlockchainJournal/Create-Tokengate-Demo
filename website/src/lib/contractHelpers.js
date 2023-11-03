@@ -1,4 +1,6 @@
 const {Web3,ethers} = require("web3");
+const BN = require('web3-utils').BN;
+
 const axios = require('axios');
 const {join} = require('path');
 const fs = require('fs');
@@ -54,7 +56,11 @@ async function getContractAndOwnerAddresses(){
     return addresses;
 }
 
-async function verifyTokenOwnership(contractAddress, userAddress, tokenId){    // Replace with the contract address of the ERC-721 contract
+async function verifyTokenOwnership(userAddress){
+
+    const addresses = await getContractAndOwnerAddresses();
+    const contractAddress = addresses.diltyAddress;
+
     const contractABI = await getAbi();
     // Connect to the ERC-721 contract
     const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -62,20 +68,36 @@ async function verifyTokenOwnership(contractAddress, userAddress, tokenId){    /
     const contractMethods = contract.methods;
 
     // Use the balanceOf function to check if the account owns the specified token
-    const balance = await contractMethods.balanceOf(userAddress).call();
-
-    if (balance === 0) {
-        console.log(`Account ${userAddress} does not own any tokens.`);
-        return;
+    let balanceOf;
+    try {
+        balanceOf = await contractMethods.balanceOf(userAddress).call();
+    } catch (e) {
+        return false;
     }
 
-    const owner = await contractMethods.ownerOf(tokenId).call();
+    /*
+    if (balance === 0) {
+        console.log(`Account ${userAddress} does not own any tokens.`);
+        return false;
+    }
+    */
 
+    if (Number(balanceOf) === 0) {
+        return false;
+    } else {
+        return true;
+    }
+
+    //const owner = await contractMethods.ownerOf(tokenId).call();
+
+    /*
     if (owner === userAddress) {
         return true;
     } else {
         return false;
     }
+
+     */
 
 }
 

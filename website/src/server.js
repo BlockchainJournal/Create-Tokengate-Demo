@@ -5,7 +5,7 @@ const sigUtil = require('@metamask/eth-sig-util');
 const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const {getEnvVars, mintAndTransfer} = require('./lib/contractHelpers');
+const {getEnvVars, mintAndTransfer, verifyTokenOwnership} = require('./lib/contractHelpers');
 const {join} = require("path");
 app.use(bodyParser.json());
 const dotenv = require('dotenv');
@@ -119,6 +119,9 @@ function verifySignature(req, res, next) {
     }
 }
 
+// Serve static files from the 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 /**
  * Route for handling MetaMask login
  */
@@ -139,6 +142,32 @@ app.post('/login', verifySignature, (req, res) => {
         return res.status(401).json({error: 'User not registered'});
     }
 });
+
+/**
+ * endpoint to retrieve token gating by user
+ */
+app.get('/token/:userAddress', async (req, res) => {
+    // get the user address from the request URL
+    const userAddress = req.params.userAddress;
+
+    // verify that the user owns the token
+    const hasTokenOwnership = await verifyTokenOwnership(userAddress);
+
+    // if the user owns the token, return a success response
+    if (hasTokenOwnership) {
+        res.status(200).json({
+            message: 'Success',
+            tokenGating: true,
+        });
+    } else {
+        // if the user does not own the token, return an error response
+        res.status(403).json({
+            message: 'Unauthorized',
+            tokenGating: false,
+        });
+    }
+});
+
 
 /**
  * Route for handling MetaMask login
@@ -165,8 +194,7 @@ app.post('/profile', async (req, res) => {
     }
 });
 
-// Serve static files from the 'public' folder
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Define a route to serve the 'index.html' file
 app.get('/', (req, res) => {
@@ -188,6 +216,8 @@ app.post('/admin', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3111;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+module.exports = {server};

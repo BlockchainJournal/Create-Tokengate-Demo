@@ -16,9 +16,8 @@
         #profile {
             display: none;
         }
-        .readonly {
-            background-color: #eee;
-            color: #555;
+        #tokenResponse{
+            font-weight: bold;
         }
     </style>
     <script src="functions.js"></script>
@@ -26,15 +25,21 @@
 
         // Immediately invoke the function before the DOM loads
         (async () => {
-            await checkForToken(null, null);
+            const result = await checkForToken();
+            if (result) {
+                document.getElementById('tokenResponse').innerHTML = 'You have all the permissions and entitlements granted by the DiLTy token';
+            }
+
         })();
     </script>
 </head>
 <body>
 <h1>MetaMask Login Example</h1>
 <button id="loginButton">Login with MetaMask</button>
+
 <div id="loginResponse"></div>
 <div id="profile">
+    <div id="tokenResponse"></div>
     <h2>Profile information</h2>
     <div id="profileForm">
         <div>

@@ -7,8 +7,11 @@ const getLoginToken = () => {return loginToken}
 const setProfile = (profile) => {profile = profile;}
 const getProfile = () => {return profile;}
 
-async function checkForToken(tokenContractAddress, tokekId, addressToCheck) {
-    alert('checking for token is not implemented yet');
+async function checkForToken() {
+    // Make a fetch request to the server endpoint /token/:userAddress
+    if(! await getUserAddressFromMetaMask())return false;
+    const response = await fetch(`/token/${await getUserAddressFromMetaMask()}`);
+    if(response.status=== 200) return true;
 }
 
 async function getUserAddressFromMetaMask() {
@@ -17,10 +20,9 @@ async function getUserAddressFromMetaMask() {
         const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
         // ... and choose the first one
         const address = accounts[0];
-        alert(address)
-        await processGatingData(address)
-    }else{
-        alert("MetaMask is not installed or not connected.");
+        return address;
+        //alert(address)
+        //await processGatingData(address)
     }
 }
 
@@ -102,6 +104,7 @@ function generateRandomHexNonce(length) {
     return '0x' + hexNonce;
 }
 
+// TODO get rid of this
 async function processGatingData(ownerAddress) {
     // Access form data
     const formData = {
