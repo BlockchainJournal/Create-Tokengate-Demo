@@ -22,6 +22,7 @@ async function mintAndTransferNFT() {
             recipientAddress
         );
 
+
         await tx.wait();
         console.log(`Transferred NFT with token ID ${tokenId} to ${recipientAddress}`)
 

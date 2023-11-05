@@ -18,6 +18,7 @@
         }
         #tokenResponse{
             font-weight: bold;
+            font-size: 16pt;
         }
     </style>
     <script src="functions.js"></script>
@@ -27,7 +28,7 @@
         (async () => {
             const result = await checkForToken();
             if (result) {
-                document.getElementById('tokenResponse').innerHTML = 'You have all the permissions and entitlements granted by the DiLTy token';
+                document.getElementById('tokenResponse').innerHTML = 'Your blockchain address has all the permissions and entitlements granted by the DiLTy token';
             }
 
         })();
@@ -38,9 +39,10 @@
 <button id="loginButton">Login with MetaMask</button>
 
 <div id="loginResponse"></div>
+
 <div id="profile">
-    <div id="tokenResponse"></div>
     <h2>Profile information</h2>
+    <div id="tokenResponse"></div>
     <div id="profileForm">
         <div>
             <label for="firstName">First Name:</label>

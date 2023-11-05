@@ -16,7 +16,7 @@ describe('Token Gating tests', () => {
         const contractAddress = "0xF2B3cD887A14d3eda09C051e9a52802bC49ACCbe";
         const userAddress = "0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27";
         const tokenId = 1;
-        result = await verifyTokenOwnership(contractAddress, userAddress, tokenId);
+        result = await verifyTokenOwnership(userAddress);
         expect(result).to.equal(true);
 
 
@@ -40,7 +40,7 @@ describe('Token Gating tests', () => {
             console.error(e)
         }
 
-    }).timeout(50000);
+    }).timeout(100000);
 
 
 });

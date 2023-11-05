@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { artifacts } = require('hardhat');
 const {join} = require('path');
 /**
  * Deploys the Dilty contract
