@@ -1,9 +1,9 @@
-const {Web3,ethers} = require("web3");
+const {Web3} = require("web3");
 const BN = require('web3-utils').BN;
-
 const axios = require('axios');
 const {join} = require('path');
 const fs = require('fs');
+const { ethers, JsonRpcProvider, FeeData } = require("ethers")
 // Define the path to your .env file
 const envFilePath = join(__dirname, '../.env'); // Replace '.env' with the actual filename if it's different
 
@@ -86,59 +86,34 @@ async function verifyTokenOwnership(userAddress){
 
 async function mintAndTransfer(recipientAddress, tokenUri) {
     const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
-    const ownerAccount = await web3.eth.accounts.privateKeyToAccount('0x' + privateKey);
-
-    if(!tokenUri) throw new Error('Required parameter tokenUri is missing');
-
+    const provider = new JsonRpcProvider(providerUrl);
     const addresses = await getContractAndOwnerAddresses();
-
-
-    const abiFilePath = join(__dirname, '../contracts', 'dilty-abi.json');
-
     const contractAddress = addresses.diltyAddress;
-
-    const contractABI = require(abiFilePath);
-    const contract = new web3.eth.Contract(contractABI, contractAddress);
-
-    const contractMethods = contract.methods;
-    const mintData = await contractMethods.mint(tokenUri).encodeABI();
-    let gasEstimate = await contractMethods.mint(tokenUri).estimateGas({ from: ownerAccount.address});
-
-    const txConfig = {
-        from: ownerAccount.address,
-        to: contractAddress,
-        value: 0,
-        gas: Number(gasEstimate) + 10000,
-        gasPrice: 20000000000,
-        data: mintData,
-    }
-
+    const abiFilePath = join(__dirname, '../contracts', 'dilty-abi.json');
+    const contractAbi = require(abiFilePath);
+    const wallet = new ethers.Wallet(privateKey, provider)
+    const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
+    //DO THE MINT
     try {
-        const signedTx = await web3.eth.accounts.signTransaction(txConfig, ownerAccount.privateKey);
-        console.log(`Sending transaction from account: ${ownerAccount.address} to contract: ${contractAddress}`);
-        const result = await web3.eth.sendSignedTransaction(signedTx);
-        console.log(JSON.stringify(result, null, 2));
-    } catch (e) {
-        console.error('Error sending the transaction:', e);
+        // Call the mint function with a token URI
+        const result = await contractInstance.mint(tokenUri);
+        console.log('Mint result:', result);
+
+        // You can access the transaction hash, gas used, and other details from the result object.
+    } catch (error) {
+        console.error('Error calling the mint function:', error);
     }
-
-
-// NOW DO THE TRANSFER
+    //DO THE TRANSFER
     try {
-        const transferData = await contractMethods.transfer(recipientAddress).encodeABI();
-        const signedTx = await web3.eth.accounts.signTransaction({
-            from: ownerAccount.address,
-            to: contractAddress,
-            value: 0,
-            gas: Number(gasEstimate) + 10000,
-            gasPrice: 20000000000,
-            data: transferData,
-        }, ownerAccount.privateKey);
+        // Call the mint function with a token URI
+        const result = await contractInstance.transfer(recipientAddress);
+        console.log('Transfer result:', result);
 
-        const result = await web3.eth.sendSignedTransaction(signedTx);
-        console.log(JSON.stringify(result, null, 2));
-    } catch (e) {
-        console.error('Error sending the transaction:', e);
+        // You can access the transaction hash, gas used, and other details from the result object.
+    } catch (error) {
+        console.error('Error calling the Transfer function:', error);
     }
+
 }
+
 module.exports = {verifyTokenOwnership,mintAndTransfer,getEnvVars}

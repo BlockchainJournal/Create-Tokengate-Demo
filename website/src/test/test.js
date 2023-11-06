@@ -21,9 +21,8 @@ describe('Token Gating tests', () => {
 
 
     })
-    it("can mint token`", async () => {
-        const envars = process.env;
 
+    it("can mint token and transfer on Ether`", async () => {
         // get the tokenUri
         const directoryPath = join(__dirname,'../contracts/');
         const filePath = join(directoryPath, 'tokenuri-data.json');
@@ -32,13 +31,7 @@ describe('Token Gating tests', () => {
         // Write the JSON data to the file
         const rslt = fs.readFileSync(filePath);
         const jsonObject = JSON.parse(rslt);
-
-        try {
-            const contract = await mintAndTransfer(process.env.RECIPIENT_ADDRESS, jsonObject.url.replace('/metadata.json',''));
-            console.log(JSON.stringify(contract, null, 2));
-        } catch (e) {
-            console.error(e)
-        }
+        await mintAndTransfer(process.env.RECIPIENT_ADDRESS, jsonObject.url.replace('/metadata.json','') );
 
     }).timeout(100000);
 
