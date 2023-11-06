@@ -5,8 +5,8 @@ const sigUtil = require('@metamask/eth-sig-util');
 const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const {getEnvVars, mintAndTransfer, verifyTokenOwnership} = require('./lib/contractHelpers');
-const {join} = require("path");
+const {mintAndTransfer, verifyTokenOwnership} = require('./lib/contractHelpers');
+
 app.use(bodyParser.json());
 const dotenv = require('dotenv');
 dotenv.config({ debug: true });
