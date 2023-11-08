@@ -18,8 +18,7 @@ contract Dilty is ERC721URIStorage, Ownable {
         addressTokenIds[_accountAddress] = _tokenId;
     }
 
-    // Function to retrieve an age based on a name
-    function getAddressTokenId(address _accountAddress) private view returns (uint256) {
+    function getAddressTokenId(address _accountAddress) public view returns (uint256) {
         return addressTokenIds[_accountAddress];
     }
 

@@ -4,6 +4,7 @@ require('dotenv').config();
 require("./tasks/diltyDeployContract");
 require("./tasks/diltyMintAndTransfer");
 require("./tasks/diltyUploadPng");
+require("./tasks/diltyUploadPngToIpfsPinata");
 const { AlchemyProvider } = require('ethers');
 
 const getErrorMessage = (envVarName) => {
@@ -21,6 +22,9 @@ if (!process.env.ALCHEMY_API_KEY)throw new Error(getErrorMessage('ALCHEMY_API_KE
 
 if (!process.env.NFT_STORAGE_KEY) throw new Error(getErrorMessage('NFT_STORAGE_KEY'));
 if (!process.env.ADMIN_PRIVATE_KEY) throw new Error(getErrorMessage('ADMIN_PRIVATE_KEY'));
+if (!process.env.ADMIN_PRIVATE_KEY) throw new Error(getErrorMessage('ADMIN_PRIVATE_KEY'));
+if (!process.env.PINATA_API_KEY) throw new Error(getErrorMessage('PINATA_API_KEY'));
+if (!process.env.PINATA_SECRET_API_KEY) throw new Error(getErrorMessage('PINATA_SECRET_API_KEY'));
 //const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -48,6 +52,8 @@ module.exports = {
       runner: 'HardhatNetworkRunner',
       nftStorageKey: `${process.env.NFT_STORAGE_KEY}`,
       adminPrivateKey: `${process.env.ADMIN_PRIVATE_KEY}`,
+      pinataApiKey: `${process.env.PINATA_API_KEY}`,
+      pinataSecretApiKey: `${process.env.PINATA_SECRET_API_KEY}`,
       }
     }
   };

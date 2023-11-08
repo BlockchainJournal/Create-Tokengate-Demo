@@ -2,27 +2,77 @@ let loginToken = '';
 let profile = {};
 
 
-const setLoginToken = (token) => {loginToken = token;}
-const getLoginToken = () => {return loginToken}
-const setProfile = (profile) => {profile = profile;}
-const getProfile = () => {return profile;}
+const setLoginToken = (token) => {
+    loginToken = token;
+}
+const getLoginToken = () => {
+    return loginToken
+}
+const setProfile = (profile) => {
+    profile = profile;
+}
+const getProfile = () => {
+    return profile;
+}
+
+async function streamToBuffer(stream) {
+    const reader = stream.getReader();
+    const chunks = [];
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        chunks.push(value);
+    }
+
+    // Concatenate the chunks into a single buffer
+    const buffer = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+    let offset = 0;
+
+    for (const chunk of chunks) {
+        buffer.set(chunk, offset);
+        offset += chunk.length;
+    }
+
+    return buffer;
+}
+
+function uint8ArrayToBase64(uint8Array) {
+    // Convert the Uint8Array to a Blob
+    const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
+
+    // Create a data URL from the Blob
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}
 
 async function checkForToken() {
     // Make a fetch request to the server endpoint /token/:userAddress
-    if(! await getUserAddressFromMetaMask())return false;
+    if (!await getUserAddressFromMetaMask()) return false;
     const response = await fetch(`/token/${await getUserAddressFromMetaMask()}`);
-    if(response.status=== 200) return true;
+    if (response.status === 200) {
+        const body = await response.body;
+        const buf = await streamToBuffer(body);
+        const base64String = uint8ArrayToBase64(buf);
+        return base64String;
+    } else {
+        return false;
+    }
 }
 
-async function getUserAddressFromMetaMask() {
+async function gateUser() {
     if (typeof window.ethereum !== 'undefined') {
         // retrieve the accounts known to the MetaMask plugin ...
         const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
         // ... and choose the first one
         const address = accounts[0];
-        return address;
-        //alert(address)
-        //await processGatingData(address)
+        //0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27return address;
+        await processGatingData(address)
     }
 }
 

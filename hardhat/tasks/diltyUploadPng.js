@@ -1,6 +1,7 @@
 const fs = require('fs');
 const {join} = require('path');
 const { NFTStorage, File } = require('nft.storage');
+
 const { task} = require('hardhat/config');
 
 task('diltyUploadPng', 'A custom task that uploads the DiLTy png stored in ./images/dilty-icon.png to IPFS and returns the metadata as a JSON object')

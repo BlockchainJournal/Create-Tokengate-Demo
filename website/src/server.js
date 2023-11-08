@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const sigUtil = require('@metamask/eth-sig-util');
 const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
-const path = require('path');
+const {path, join} = require('path');
+const fs = require('fs');
 const {mintAndTransfer, verifyTokenOwnership} = require('./lib/contractHelpers');
 
 app.use(bodyParser.json());
@@ -120,7 +121,7 @@ function verifySignature(req, res, next) {
 }
 
 // Serve static files from the 'public' folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(join(__dirname, 'public')));
 
 /**
  * Route for handling MetaMask login
@@ -158,12 +159,14 @@ app.get('/token/:userAddress', async (req, res) => {
         res.status(200).json({
             message: 'Success',
             tokenGating: true,
+            imageAsBase64Str: hasTokenOwnership
         });
     } else {
         // if the user does not own the token, return an error response
         res.status(403).json({
             message: 'Unauthorized',
             tokenGating: false,
+            imageAsBase64Str: null
         });
     }
 });
@@ -203,16 +206,15 @@ app.get('/', (req, res) => {
 
 // Define a route to serve the 'index.html' file
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+    res.sendFile(join(__dirname, 'public', 'admin.html'));
 });
 
 // Define a route to serve the 'index.html' file
 app.post('/admin', async (req, res) => {
     // Do the token transfer against the EVM blockchain
-    const result = await mintAndTransfer(req.body.recipientAddress)
-    console.log(req.body);
+    //console.log(req.body);
+    const result = await mintAndTransfer(req.body.recipientAddress);
     return res.status(200).json({message: JSON.stringify(req.body, null, 2)});
-
 });
 
 const PORT = process.env.PORT || 3111;
