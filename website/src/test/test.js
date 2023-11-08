@@ -1,6 +1,6 @@
 const {describe, it} = require("mocha");
 const {expect} = require("chai");
-const {mintAndTransfer, verifyTokenOwnership, fetchPngUrlFromContract, getNFTImageUrl} = require('../lib/contractHelpers')
+const {mintAndTransfer, verifyTokenOwnership, fetchPngUrlFromContract, getNFTImageUrl, getNextTokenId} = require('../lib/contractHelpers')
 const {join} = require('path');
 const envFilePath = join(__dirname, '../.env'); // Replace '.env' with the actual filename if it's different
 const dotenv = require('dotenv');
@@ -8,6 +8,11 @@ const fs = require("fs");
 dotenv.config({ debug: true, path: envFilePath});
 
 describe('Token Gating tests', () => {
+
+    it("can get nextTokenId", async () => {
+        const result = await getNextTokenId();
+        expect(Number(result)).to.be.a("number");
+    });
 
     it("can can get png url", async () => {
         const result = await getNFTImageUrl("QmPsV3UnruNFBepM4fUXJnnDEypPa9nVtKCXa9gmpFUrmx")

@@ -51,6 +51,16 @@ async function fetchPngUrlFromContract(tokenId) {
    return url;
 }
 
+async function getNextTokenId() {
+    const addresses = await getContractAndOwnerAddresses();
+    const contractAddress = addresses.diltyAddress;
+    const contractAbi = require(abiFilePath);
+    const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
+    // Get the token URI for the NFT.
+    const nextTokenId = await contractInstance.getNextTokenId();
+    return nextTokenId;
+}
+
 async function getTokenData() {
     const directoryPath = join(__dirname,'../contracts/');
     const filePath = join(directoryPath, 'tokenuri-data.json');
@@ -140,4 +150,4 @@ async function mintAndTransfer(recipientAddress) {
 
 }
 
-module.exports = {verifyTokenOwnership,mintAndTransfer,getEnvVars, fetchPngUrlFromContract, getNFTImageUrl}
+module.exports = {verifyTokenOwnership,mintAndTransfer,getEnvVars, fetchPngUrlFromContract, getNFTImageUrl, getNextTokenId}

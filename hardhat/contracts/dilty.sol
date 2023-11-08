@@ -22,6 +22,10 @@ contract Dilty is ERC721URIStorage, Ownable {
         return addressTokenIds[_accountAddress];
     }
 
+    function getNextTokenId() public view returns (uint256) {
+        return nextTokenId;
+    }
+
 
     function mint(string memory _tokenURI) public onlyOwner returns (uint256) {
         totalSupply++;
