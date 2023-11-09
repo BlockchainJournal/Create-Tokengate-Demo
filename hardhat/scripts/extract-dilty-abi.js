@@ -18,7 +18,11 @@ async function extractABI(contractName) {
 // Usage of the extractABI function
 async function main() {
   const tokenABI = await extractABI('Dilty'); // Use the contract name, not command-line style options
-  const directoryPath = '../website/src/contracts/';
+  const directoryPath = join(__dirname, './data');
+  // Create the directory if it doesn't exist
+  if (!fs.existsSync(directoryPath)) {
+    fs.mkdirSync(directoryPath, {recursive: true});
+  }
   const filePath = join(directoryPath, 'dilty-abi.json');
 
 
@@ -29,21 +33,6 @@ async function main() {
 
 // Write the JSON data to the file
   fs.writeFileSync(filePath, JSON.stringify(tokenABI, null, 2));
-
-  // Output the ABI to the console
-  console.log(JSON.stringify(tokenABI, null, 2));
-
-  // Destination file path
-  const destinationFilePath = './scripts/dilty-abi.json';
-
-// Copy the file
-  fs.copyFile(filePath, destinationFilePath, (err) => {
-    if (err) {
-      console.error('Error copying the file:', err);
-    } else {
-      console.log('File copied successfully!');
-    }
-  });
 
 }
 

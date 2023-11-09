@@ -4,7 +4,6 @@ const validateConfig = (config) => {
         'contractAddress',
         'tokenUri',
         'tokenId',
-        'recipientAddress'
     ];
     for (const property of requiredProperties) {
         if (!config[property]) {

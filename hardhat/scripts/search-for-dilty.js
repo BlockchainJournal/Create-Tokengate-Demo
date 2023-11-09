@@ -1,19 +1,23 @@
 const {infuraUrl} = require("../hardhat.config.js");
+const fs = require("fs");
+const {join} = require("path");
+const  {ethers, JsonRpcProvider} = require("ethers");
 
 async function searchContract() {
     try {
-        const contractAddress = "0x6Da8954c259f0D10638e7c9ab4178061A25a6723";
-        const contractABI = require("./dilty-abi.json");
+        const directoryPath = join(__dirname, './data');
+        const filePath = join(directoryPath, 'dilty-addresses.json');
+        const json = fs.readFileSync(filePath, 'utf8');
+        const contractAddress = JSON.parse(json).diltyAddress;
+        const contractABI = require("./data/dilty-abi.json");
 
-        const provider = ethers.getDefaultProvider(infuraUrl);
+        const provider = new JsonRpcProvider(infuraUrl);
         const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
-        const contractName = await contract.name(); // Replace with the actual function you want to call
+        const contractName = await contract.name();
         console.log("Contract Name:", contractName);
-
-        // Add more interactions with the contract if needed
-        // For example, you can call other functions or retrieve contract data here
-
+        const nextTokenId = await contract.getNextTokenId();
+        console.log("Next Token ID:", nextTokenId.toString());
     } catch (error) {
         console.error("Error searching for the contract:", error);
     }

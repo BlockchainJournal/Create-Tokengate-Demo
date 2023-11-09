@@ -1,53 +1,59 @@
 const { task} = require('hardhat/config');
 const {Contract} = require("ethers");
 const { validateConfig } = require('./validateConfig');
+const {join} = require("path");
+const fs = require("fs");
 
-task('diltyMintAndTransfer', 'A diltyConfiguration object for the mint and transfer task.The object REQUIRES the following properties: {contractABI as JSON, contractAddress, tokenUri, tokenID, recipientAddress}')
-    .addParam('diltyconfig', {
-        type: 'object',
-        paramTypes: {
-            contractABI: {
-                type: 'string',
-                description: 'The contract ABI of the DiLTy contract.'
-            },
-            contractAddress: {
-                type: 'string',
-                description: 'The address of the DiLTy contract.'
-            },
-            tokenUri: {
-                type: 'string',
-                description: 'The tokenUri to apply to the minted token.'
-            },
-            tokenId: {
-                type: 'number',
-                description: 'The token ID to mint and transfer.'
-            },
-            recipientAddress: {
-                type: 'string',
-                description: 'The recipient address for the token transfer.'
-            }
-        },
-        description: 'A diltyConfiguration object for the mint and transfer task.The object REQUIRES the following properties: contractABI as JSON, contractAddress, tokenUri, tokenID, recipientAddress'
-    })
+task('diltyMintAndTransfer', 'A custom task that mints a DiLTy NFT and transfers it to the specified address defined the recipientAddress parameter.')
+    .addParam('recipientaddress', 'The recipient address as an 0x string')
     .setAction(async (taskArgs, hre) => {
-        const { adminPrivateKey } = hre.network.config;
-        validateConfig(taskArgs.diltyConfig);
+        const getParams = async () => {
+            const directoryPath = join(__dirname,'./data');
+            const resultObj = {};
 
-        const contractABI = taskArgs.diltyConfig.contractABI;
+            // Get contract ABI from file
+            let json = fs.readFileSync(join(directoryPath, 'dilty-abi.json'),'utf8');
+            resultObj['contractABI'] = JSON.parse(json);
+
+            // Get contract address from file
+            json = fs.readFileSync(join(directoryPath, 'dilty-contract-address.json'),'utf8');
+            resultObj['contractAddress'] = JSON.parse(json).contractAddress;
+            // Get tokenUri CID from file
+            json = fs.readFileSync(join(directoryPath, 'dilty-ipfs.json'),'utf8');
+            const cid = JSON.parse(json).cid;
+            resultObj['tokenUri'] = `ipfs://${cid}`;
+            // Get the next token ID from contract
+            const [deployer] = await ethers.getSigners();
+            const artifact = await hre.artifacts.readArtifact('Dilty');
+            const abi = artifact.abi;
+            console.log("The contract address is: " + resultObj['contractAddress']);
+            const contract = hre.ethers.getContractAt('Dilty', resultObj['contractAddress']);
+            const tokenId = await contract.name();
+            resultObj['tokenId'] = tokenId;
+
+            return resultObj;
+        }
+        const { adminPrivateKey } = hre.network.config;
+        const configParams = await getParams();
+        if(!taskArgs.recipientaddress) throw new Error('The recipientaddress parameter is required.');
+        validateConfig(configParams);
+
+        // Mint the NFT
         const [deployer] = await ethers.getSigners();
-        const contract = new Contract(taskArgs.diltyConfig.contractAddress, contractABI, deployer);
-        const rst = await contract.mint(taskArgs.diltyConfig.tokenUri);
+        const abi = require('./data/dilty-abi.json');
+        const abiArray = Object.keys(abi).map(key => abi[key]);
+        const contract = new Contract(configParams.contractAddress, abiArray, deployer);
+        const rst = await contract.mint(configParams.tokenUri);
 
         console.log('NFT minted successfully!');
         console.log('Transaction Hash:', rst.hash);
-        const tokenId = taskArgs.diltyConfig.tokenId;
-        const recipientAddress = taskArgs.diltyConfig.recipientAddress;
+        const tokenId = configParams.tokenId;
         // Transfer the ERC-721 token to the recipient
         const tx = await contract["transfer(address)"](
-            recipientAddress
+            taskArgs.recipientaddress
         );
 
         await tx.wait();
-        console.log(JSON.stringify({tokenId,recipientAddress}, null, 2));
-        //console.log(`Transferred NFT with token ID ${tokenId} to ${recipientAddress}`)
+
+        console.log(`Transferred NFT with token ID ${configParams.tokenId} to recipient ${taskArgs.recipientaddress} at contract address ${configParams.contractAddress}`);
     });
