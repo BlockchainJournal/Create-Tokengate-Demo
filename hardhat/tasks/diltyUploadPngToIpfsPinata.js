@@ -40,7 +40,7 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
             result = await pinata.pinJSONToIPFS(ipfMetaJson);
             ipfsData.metadataCid = result.IpfsHash;
 
-            const directoryPath = join(__dirname, './data');
+            const directoryPath = join(__dirname, '../scripts/data');
             // Create the directory if it doesn't exist
             if (!fs.existsSync(directoryPath)) {
                 fs.mkdirSync(directoryPath, {recursive: true});
