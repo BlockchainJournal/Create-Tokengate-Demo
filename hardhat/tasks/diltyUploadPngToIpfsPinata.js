@@ -8,7 +8,7 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
     .setAction(async (taskArgs, hre) => {
         const { pinataApiKey, pinataSecretApiKey } = hre.network.config;
 
-        // The image the will be posted to IPFS
+        // The image that will be posted to IPFS
         let filePath = join(__dirname, '../images', 'art-01.png');
         // Use the api keys by providing the strings directly
         const pinata = new pinataSDK(pinataApiKey, pinataSecretApiKey );
@@ -23,7 +23,7 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
         };
 
         try {
-            // The object ipfsData will be populated with both CID for the
+            // The object named ipfsData will be populated with both CID for the
             // image and as well as the CID for the JSON metadata that will
             // be the tokenURI for the NFT
             const ipfsData = {};
