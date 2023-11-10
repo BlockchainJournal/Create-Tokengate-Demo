@@ -1,9 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
-const {join} = require("path");
 require('dotenv').config();
-require("./tasks/diltyDeployContract");
-require("./tasks/diltyMintAndTransfer");
-require("./tasks/diltyUploadPng");
 require("./tasks/diltyUploadPngToIpfsPinata");
 const { AlchemyProvider } = require('ethers');
 

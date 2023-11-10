@@ -62,5 +62,5 @@ MORE TO COME
 # Uploading an image to IPFS
 
 ```bash
-npx hardhat run scripts/upload-dilty-to-ipfs.js
+npx hardhat diltyUploadPngToIpfsPinata
 ```
