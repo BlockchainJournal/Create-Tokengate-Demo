@@ -1,5 +1,5 @@
-const {networks, infuraApiKey, privateKey, infuraUrl} = require("../hardhat.config.js");
-const { AlchemyProvider, Contract, JsonRpcProvider} = require('ethers');
+const {privateKey, infuraUrl} = require("../hardhat.config.js");
+const { JsonRpcProvider} = require('ethers');
 const {ethers} = require("hardhat");
 const fs = require("fs");
 const {join} = require("path");
@@ -7,7 +7,7 @@ const {join} = require("path");
 
 /*
 Sample call:
-RECIPIENT_ADDRESS=0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27 npx hardhat run scripts/search-for-dilty.js --network sepolia
+RECIPIENT_ADDRESS=0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27 npx hardhat run scripts/mint-n-transfer-dilty.js --network sepolia
 
  */
 async function mintAndTransferNFT() {
@@ -25,17 +25,14 @@ async function mintAndTransferNFT() {
 
         filePath = join(directoryPath, 'dilty-ipfs.json');
         const jsonIpfs = fs.readFileSync(filePath, 'utf8');
-        const cid = JSON.parse(jsonIpfs).cid;
-        const gatewayUrl = 'https://gateway.pinata.cloud/ipfs/'
+        const metadataCid = JSON.parse(jsonIpfs).metadataCid;
+        const gatewayUrl = 'ipfs://';
         const signer = new ethers.Wallet(privateKey);
         const provider = new JsonRpcProvider(infuraUrl);
-        const tokenUri = `${gatewayUrl}${cid}`;
+        const tokenUri = `${gatewayUrl}${metadataCid}`;
         const wallet = new ethers.Wallet(privateKey, provider);
         const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
-        const result = await contractInstance.mint(tokenUri);
-        //const contract = new Contract(contractAddress, contractABI, {provider, signer});
-
-        //const rst = await contract.mint(tokenURI);
+        const result = await contractInstance.mint(tokenUri,  process.env.RECIPIENT_ADDRESS);
         const nextTokenId = await contractInstance.getNextTokenId();
 
         console.log('NFT minted successfully!');
@@ -49,7 +46,7 @@ async function mintAndTransferNFT() {
 
 
         await tx.wait();
-        console.log(`Transferred NFT with token ID ${Number(nextTokenId)} to ${recipientAddress} with Token URI ${tokenUri} at contract address ${contractAddress}`);
+        console.log(`Transferred NFT with token ID ${Number(nextTokenId)-1} to ${recipientAddress} with Token URI ${tokenUri} at contract address ${contractAddress}`);
 
     } catch (error) {
         console.error("Error transferring NFT:", error);

@@ -20,12 +20,25 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
             type: 'image/png'
         };
 
-        try { // Upload the file and metadata to Pinata
-            const result = await pinata.pinFileToIPFS(readableStream, {
+        try { // Upload the image file and metadata to Pinata
+            const ipfsData = {};
+
+            let result = await pinata.pinFileToIPFS(readableStream, {
                 pinataMetadata: metadata
             });
 
+            // grab its cid
             const ipfsCid = result.IpfsHash;
+
+            ipfsData.imageCid = ipfsCid;
+            const gatewayUrl = 'https://gateway.pinata.cloud/ipfs/'
+            const ipfMetaJson = {};
+            ipfMetaJson.name = metadata.name;
+            ipfMetaJson.description = metadata.description;
+            ipfMetaJson.image = `${gatewayUrl}${ipfsCid}`;
+
+            result = await pinata.pinJSONToIPFS(ipfMetaJson);
+            ipfsData.metadataCid = result.IpfsHash;
 
             const directoryPath = join(__dirname, './data');
             // Create the directory if it doesn't exist
@@ -33,9 +46,9 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
                 fs.mkdirSync(directoryPath, {recursive: true});
             }
             const jsonFilePath = join(directoryPath, 'dilty-ipfs.json');
-            console.log(`Writing CID ${ipfsCid} to ${jsonFilePath}`);
+            console.log(`Writing to ${jsonFilePath} the following ${JSON.stringify(ipfsData, null, 2)}`);
             // Write the ABI JSON data to the file
-            fs.writeFileSync(jsonFilePath, JSON.stringify({cid: ipfsCid}, null, 2));
+            fs.writeFileSync(jsonFilePath, JSON.stringify(ipfsData, null, 2));
         } catch (e) {
             console.error(e);
         }

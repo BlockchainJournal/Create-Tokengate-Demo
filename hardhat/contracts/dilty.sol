@@ -5,29 +5,39 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Dilty is ERC721URIStorage, Ownable {
-    uint256 private totalSupply;
+contract Dilty02 is ERC721URIStorage, Ownable {
+    uint256 private totalSupply = 0;
     mapping(address => uint256) addressTokenIds;
-    uint256 private nextTokenId = 0;
+
     event Minting(string tokenURI, uint256 tokenId);
 
-    constructor() ERC721("Blockchain Journal DiLTy", "BCJDLT") Ownable(msg.sender) {}
-
-    // Function to add or update an amount for a particular accountAddress
-    function setAddressTokenId(address _accountAddress, uint256 _tokenId) private {
-        addressTokenIds[_accountAddress] = _tokenId;
-    }
+    constructor() ERC721("Blockchain Journal DiLTy V2", "BCJDLT2") Ownable(msg.sender) {}
 
     function getAddressTokenId(address _accountAddress) public view returns (uint256) {
         return addressTokenIds[_accountAddress];
     }
 
     function getNextTokenId() public view returns (uint256) {
-        return nextTokenId;
+        return totalSupply + 1;
     }
 
+    function hasAddress(address addr) public view returns (bool) {
+        return addressTokenIds[addr] != 0;
+    }
 
-    function mint(string memory _tokenURI) public onlyOwner returns (uint256) {
+    /*
+        * Mints a new token only if the address of _intendedRecipient does not already one,
+        * otherwise the tokenId of the token associated with the address of the _intendedRecipient
+        * is returned.
+        * @param _tokenURI the URI of the token
+        * @param _intendedRecipient the address of the intended recipient of the token being minted
+        * @return the tokenId of the minted token
+    */
+    function mint(string memory _tokenURI, address _intendedRecipient) public onlyOwner returns (uint256) {
+        //check if the address already has an transferred token
+        if (addressTokenIds[_intendedRecipient] != 0) {
+            return addressTokenIds[_intendedRecipient];
+        }
         totalSupply++;
         uint256 tokenId = totalSupply;
         emit Minting(_tokenURI, tokenId);
@@ -37,17 +47,21 @@ contract Dilty is ERC721URIStorage, Ownable {
     }
 
 
+    /**
+     * Transfer a token to a new address, MUST be called directly after minting
+     * @param _to address to transfer the token to
+     * @return true if the transfer was successful, false if not
+   */
     function transfer(address _to) external onlyOwner returns (bool) {
         //check if the address already has a token
-        if(getAddressTokenId(_to) != 0) {
+        if (getAddressTokenId(_to) > 0) {
             return false;
         }
         uint256 amount = 1;
-        require(totalSupply >= amount, "Not enough tokens");
-        nextTokenId++;
+        require(totalSupply >= amount, "Not enough tokens. Make sure you use the mint() function to mint a token intended for the recipient before doing the transfer");
         //if not, then transfer the token to the new address
-        _transfer(msg.sender, _to, nextTokenId);
-        setAddressTokenId(_to, nextTokenId);
+        _transfer(msg.sender, _to, totalSupply);
+        addressTokenIds[_to] = totalSupply;
         return true;
     }
 

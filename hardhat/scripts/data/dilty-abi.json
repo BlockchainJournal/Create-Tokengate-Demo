@@ -379,6 +379,25 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "hasAddress",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "owner",
         "type": "address"
       },
@@ -405,6 +424,11 @@
         "internalType": "string",
         "name": "_tokenURI",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_intendedRecipient",
+        "type": "address"
       }
     ],
     "name": "mint",

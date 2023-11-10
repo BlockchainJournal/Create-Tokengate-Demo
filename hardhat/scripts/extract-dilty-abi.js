@@ -17,7 +17,7 @@ async function extractABI(contractName) {
 
 // Usage of the extractABI function
 async function main() {
-  const tokenABI = await extractABI('Dilty'); // Use the contract name, not command-line style options
+  const tokenABI = await extractABI('Dilty02'); // Use the contract name, not command-line style options
   const directoryPath = join(__dirname, './data');
   // Create the directory if it doesn't exist
   if (!fs.existsSync(directoryPath)) {
