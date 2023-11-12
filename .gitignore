@@ -4,6 +4,8 @@ hardhat/.env
 hardhat/scripts/dilty-abi.json
 website/src/.env
 website/src/contracts/
+website/src/data
+hardhat/scripts/data
 
 artifacts
 cache
