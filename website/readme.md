@@ -1,3 +1,5 @@
+![Under Construction](https://buysellgraphic.com/images/graphic_preview/zip_detail/22482_under_construction_signjpg.jpg)
+
 # Working with the demonstration website
 
 Use Hardhat to compile the code and extract the ABI and bytecode for the smart contract.
