@@ -27,9 +27,18 @@ const abiFilePath = join(__dirname, '../data', 'dilty-abi.json');
 const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
 const provider = new JsonRpcProvider(providerUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
+const gatewayUrl = 'https://gateway.pinata.cloud/ipfs/';
+
+async function getNFTImageUrlFromTokenUri(tokeUri) {
+    const cid = tokeUri.replace('ipfs://','');
+    const response = await fetch(`${gatewayUrl}${cid}`);
+    const json = await response.text();
+    const obj = JSON.parse(json);
+    return obj.image;
+}
+
 
 async function getNFTImageUrl(tokenCid) {
-    const gatewayUrl = 'https://gateway.pinata.cloud/ipfs/';
     if(tokenCid.includes('https://')){
         const result = await fetch(tokenCid);
         const obj = await result.json();
@@ -144,10 +153,18 @@ async function mintAndTransfer(recipientAddress) {
         // Call the transfer function with a token URI
         const result = await contractInstance.transfer(recipientAddress);
         console.log('Transfer result:', result);
+        return result;
     } catch (error) {
         console.error('Error calling the Transfer function:', error);
     }
 
 }
 
-module.exports = {verifyTokenOwnership,mintAndTransfer,getEnvVars, fetchPngUrlFromContract, getNFTImageUrl, getNextTokenId}
+module.exports = {
+    verifyTokenOwnership,
+    mintAndTransfer,
+    getEnvVars,
+    fetchPngUrlFromContract,
+    getNFTImageUrl,
+    getNextTokenId,
+    getNFTImageUrlFromTokenUri}

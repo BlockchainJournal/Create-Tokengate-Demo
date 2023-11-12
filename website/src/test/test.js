@@ -1,6 +1,6 @@
 const {describe, it} = require("mocha");
 const {expect} = require("chai");
-const {mintAndTransfer, verifyTokenOwnership, fetchPngUrlFromContract, getNFTImageUrl, getNextTokenId} = require('../lib/contractHelpers')
+const {mintAndTransfer, verifyTokenOwnership, fetchPngUrlFromContract, getNFTImageUrl, getNextTokenId, getNFTImageUrlFromTokenUri} = require('../lib/contractHelpers')
 const {join} = require('path');
 const envFilePath = join(__dirname, '../.env'); // Replace '.env' with the actual filename if it's different
 const dotenv = require('dotenv');
@@ -14,10 +14,35 @@ describe('Token Gating tests', () => {
         expect(Number(result)).to.be.a("number");
     });
 
-    it("can can get png url", async () => {
-        const result = await getNFTImageUrl("QmPsV3UnruNFBepM4fUXJnnDEypPa9nVtKCXa9gmpFUrmx")
+    it("can can get png url from tokenUri", async () => {
+        // get the tokenUri from ./src/data/dilty-ipfs.json
+        const filePath = join(__dirname, '../data', 'dilty-ipfs.json');
+        // Read the file contents
+        const fileContents = fs.readFileSync(filePath, 'utf8');
+
+        // Parse the file contents as JSON
+        const ipfsObj = JSON.parse(fileContents);
+        const tokenUri = "ipfs://" + ipfsObj.metadataCid;
+
+        const result = await getNFTImageUrlFromTokenUri(tokenUri);
         expect(result).to.be.a("string");
         expect(result).to.match(/^(https?:\/\/)?[^\s]+\.[^\s]+$/);
+
+    })
+
+    it("can can get png url", async () => {
+        // get the tokenUri from ./src/data/dilty-ipfs.json
+        const filePath = join(__dirname, '../data', 'dilty-ipfs.json');
+        // Read the file contents
+        const fileContents = fs.readFileSync(filePath, 'utf8');
+
+        // Parse the file contents as JSON
+        const ipfsObj = JSON.parse(fileContents);
+
+        const result = await getNFTImageUrl(ipfsObj.imageCid);
+        expect(result).to.be.a("string");
+        expect(result).to.match(/^(https?:\/\/)?[^\s]+\.[^\s]+$/);
+
     })
     it("can extract png from contract", async () => {
         const result = await fetchPngUrlFromContract(5)
@@ -33,13 +58,7 @@ describe('Token Gating tests', () => {
     })
 
     it("can mint token and transfer on Ether`", async () => {
-        // get the tokenUri
-        const directoryPath = join(__dirname,'../contracts/');
-        const filePath = join(directoryPath, 'tokenuri-data.json');
-        // Write the JSON data to the file
-        const rslt = fs.readFileSync(filePath);
-        const jsonObject = JSON.parse(rslt);
-        await mintAndTransfer(process.env.RECIPIENT_ADDRESS, jsonObject.url.replace('/metadata.json','') );
+        const result = await mintAndTransfer(process.env.RECIPIENT_ADDRESS) ;
 
     }).timeout(5000);
 });
