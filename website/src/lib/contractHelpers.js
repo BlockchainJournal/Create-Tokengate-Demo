@@ -23,7 +23,7 @@ if(!process.env.PINATA_SECRET_API_KEY) throw new Error('Required environment var
 const providerUrl =  `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`
 
 
-const abiFilePath = join(__dirname, '../contracts', 'dilty-abi.json');
+const abiFilePath = join(__dirname, '../data', 'dilty-abi.json');
 const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
 const provider = new JsonRpcProvider(providerUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -79,7 +79,7 @@ async function getTokenData() {
     return {ipfsUrl, ipfsCid}
 }
 async function getContractAndOwnerAddresses(){
-    const filePath = join(__dirname, '../contracts', 'dilty-addresses.json');
+    const filePath = join(__dirname, '../data', 'dilty-addresses.json');
     let addresses;
 
     try {

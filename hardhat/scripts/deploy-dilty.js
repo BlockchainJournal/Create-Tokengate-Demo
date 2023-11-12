@@ -10,10 +10,7 @@ async function deployDiltyContract() {
 
     const [deployer] = await ethers.getSigners();
 
-    //console.log("Deploying contracts with the account:", deployer.address);
-
     const contract = await ethers.deployContract("Dilty02");
-    //await ethers.verify(contract.address);
     console.log("Dilty address:", await contract.getAddress());
 
     const data = {diltyAddress: await contract.getAddress(), deployerAddress: deployer.address}
@@ -24,8 +21,6 @@ async function deployDiltyContract() {
         fs.mkdirSync(directoryPath, {recursive: true});
     }
 
-    //const directoryPath = './data';
-    //const directoryPath = '../website/src/contracts/';
     const filePath = join(directoryPath, 'dilty-addresses.json');
 
     // Create the directory if it doesn't exist
@@ -35,6 +30,15 @@ async function deployDiltyContract() {
 
     // Write the JSON data to the file
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+
+    // Copy the address data to the website
+    const websiteDataPath = join(__dirname, '../../website/src/data');
+    if (!fs.existsSync(websiteDataPath)) {
+        fs.mkdirSync(websiteDataPath, {recursive: true});
+    }
+    const websiteJsonFilePath = join(websiteDataPath, 'dilty-addresses.json');
+    console.log(`Copying ${filePath} to ${websiteJsonFilePath}`);
+    fs.copyFileSync(filePath, websiteJsonFilePath);
 
     return contract;
   }
