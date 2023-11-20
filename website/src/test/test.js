@@ -52,7 +52,6 @@ describe('Token Gating tests', () => {
 
     it("can verify user token ownership", async () => {
         const userAddress = "0xADeB8052682aeF1A7B127fC158fAdEd08a19A843";
-        //const userAddress = "0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27";
         const result = await verifyTokenOwnership(userAddress);
         expect(result).to.equal(true);
     })

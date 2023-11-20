@@ -6,7 +6,7 @@ const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
 const {path, join} = require('path');
 const fs = require('fs');
-const {mintAndTransfer, verifyTokenOwnership} = require('./lib/contractHelpers');
+const {mintAndTransfer, verifyTokenOwnership, getContractAndOwnerAddresses} = require('./lib/contractHelpers');
 
 app.use(bodyParser.json());
 const dotenv = require('dotenv');
@@ -131,12 +131,12 @@ app.post('/login', verifySignature, (req, res) => {
     // Check if the user is already registered
     if (users.includes(senderAddress.toLowerCase())) {
         // User exists, generate a JWT token (you should use a real authentication library)
-        const token = generateAuthToken(senderAddress);
+        const jwtToken = generateAuthToken(senderAddress);
         // Check to see if the sender address is a known profile.
         let profile;
         const matchingProfile = profiles.find(obj => obj.address === senderAddress);
         if (matchingProfile) profile = {firstName, lastName, email} = matchingProfile;
-        return res.status(200).json({token, address: senderAddress, profile});
+        return res.status(200).json({jwtToken, address: senderAddress, profile});
         //return res.json({ token });
     } else {
         // User is not registered, you may choose to register them
@@ -148,26 +148,16 @@ app.post('/login', verifySignature, (req, res) => {
  * endpoint to retrieve token gating by user
  */
 app.get('/token/:userAddress', async (req, res) => {
+    const tokenData = await verifyJwtToken(req, res)
     // get the user address from the request URL
     const userAddress = req.params.userAddress;
 
     // verify that the user owns the token
-    const hasTokenOwnership = await verifyTokenOwnership(userAddress);
-
-    // if the user owns the token, return a success response
-    if (hasTokenOwnership) {
-        res.status(200).json({
-            message: 'Success',
-            tokenGating: true,
-            imageAsBase64Str: hasTokenOwnership
-        });
-    } else {
-        // if the user does not own the token, return an error response
-        res.status(403).json({
-            message: 'Unauthorized',
-            tokenGating: false,
-            imageAsBase64Str: null
-        });
+    try {
+        const tokenId = await verifyTokenOwnership(userAddress);
+        res.status(200).json({tokenId})
+    } catch (e) {
+        res.status(401).json({error: e.message})
     }
 });
 
@@ -207,6 +197,13 @@ app.get('/', (req, res) => {
 // Define a route to serve the 'index.html' file
 app.get('/admin', (req, res) => {
     res.sendFile(join(__dirname, 'public', 'admin.html'));
+});
+
+// Define a route to serve the 'index.html' file
+app.get('/contract', async (req, res) => {
+    // return the JSON by calling the function getContractAndOwnerAddresses()
+    const json = await getContractAndOwnerAddresses();
+    res.status(200).json(json);
 });
 
 // Define a route to serve the 'index.html' file

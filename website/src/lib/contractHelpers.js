@@ -51,6 +51,7 @@ async function getNFTImageUrl(tokenCid) {
 async function fetchPngUrlFromContract(tokenId) {
     const addresses = await getContractAndOwnerAddresses();
     const contractAddress = addresses.diltyAddress;
+
     const contractAbi = require(abiFilePath);
     const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
     // Get the token URI for the NFT.
@@ -109,27 +110,21 @@ async function getEnvVars(){
     return process.env;
 }
 
+/**
+ *
+ * @param userAddress, the address of the user to check
+ * @returns {Promise<*|number>} that is the tokenId or -1 if not found
+ */
 async function verifyTokenOwnership(userAddress){
-    const addresses = await getContractAndOwnerAddresses();
-    const contractAddress = addresses.diltyAddress;
+    const contractAddresses = await getContractAndOwnerAddresses()
     const contractAbi = require(abiFilePath);
-    const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
-    let balanceOf;
+    const contractInstance = new ethers.Contract(contractAddresses.diltyAddress, contractAbi, wallet);
     try {
-        balanceOf = await contractInstance.balanceOf(userAddress);
-        console.log('balanceOf result:', balanceOf);
-        //balanceOf = await contractMethods.balanceOf(userAddress).call();
+        const tokenId= await contractInstance.getAddressTokenId(userAddress);
+        return tokenId;
     } catch (e) {
-        return;
+        return -1;
     }
-
-
-    if (Number(balanceOf) === 0) {
-        return;
-    } else {
-        const tokenId = contractInstance.getAddressTokenId(userAddress);
-        return await fetchPngUrlFromContract(tokenId);
-    };
 }
 
 async function mintAndTransfer(recipientAddress) {
@@ -167,4 +162,5 @@ module.exports = {
     fetchPngUrlFromContract,
     getNFTImageUrl,
     getNextTokenId,
-    getNFTImageUrlFromTokenUri}
+    getNFTImageUrlFromTokenUri,
+    getContractAndOwnerAddresses}

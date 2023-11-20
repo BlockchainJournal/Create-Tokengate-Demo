@@ -51,20 +51,24 @@ function uint8ArrayToBase64(uint8Array) {
     });
 }
 
-async function checkForToken() {
+async function getTokenId(jwtToken, address) {
     // Make a fetch request to the server endpoint /token/:userAddress
-    if (!await getUserAddressFromMetaMask()) return false;
-    const response = await fetch(`/token/${await getUserAddressFromMetaMask()}`);
-    if (response.status === 200) {
-        const body = await response.body;
-        const buf = await streamToBuffer(body);
-        const base64String = uint8ArrayToBase64(buf);
-        return base64String;
-    } else {
-        return false;
+    try {
+        const apiUrl = `/token/${address}`;
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${jwtToken}`
+            },
+        });
+        if (response.status === 200) {
+            const data = await response.json();
+            return data.tokenId;
+        }
+    } catch (e) {
     }
 }
-
 async function gateUser() {
     if (typeof window.ethereum !== 'undefined') {
         // retrieve the accounts known to the MetaMask plugin ...
@@ -107,10 +111,11 @@ async function loginWithMetaMask() {
 
             if (response.ok) {
                 const data = await response.json();
-                const {token, address, profile} = data;
-                setLoginToken(token);
+                const {jwtToken, address, profile} = data;
+                const tokenId = await getTokenId(jwtToken, address);
                 setProfile(profile);
                 document.getElementById("loginButton").style.display = "none";
+                document.getElementById("tokenId").innerHTML = 'Token id is: ' + tokenId;
                 if (!profile) {
                     document.getElementById("loginResponse").innerHTML = `Logged in at address ${address}.<br />Please enter your profile information:`;
                     showProfileUI();
@@ -152,6 +157,28 @@ function generateRandomHexNonce(length) {
     hexNonce = hexNonce.slice(0, length);
 
     return '0x' + hexNonce;
+}
+
+async function getContractAddress() {
+    const apiUrl = '/contract';
+    // fetch the contract address from the server
+    try {
+        const res = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${getLoginToken()}`
+            },
+        });
+        const response = await res.json();
+        if (res.status === 200 || res.status === 201) document.getElementById("contractAddress").innerText = `Contract address:  ${response.diltyAddress}`
+    } catch (error) {
+        document.getElementById("contractAddress").innerText = `${error.message}`
+    }
+}
+
+async function getGatingStatus(ownerAddress) {
+
 }
 
 // TODO get rid of this

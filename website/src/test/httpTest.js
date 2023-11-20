@@ -18,6 +18,15 @@ describe('GET /token/:userAddress', () => {
         expect(response.body.tokenGating).to.equal(true);
     });
 
+    it('should return contract address and owner', async () => {
+        //const userAddress = process.env.RECIPIENT_ADDRESS;
+        const response = await supertest(server).get(`/contract`);
+
+        expect(response.status).to.equal(200);
+        expect(response.body.diltyAddress).to.be.a('string');
+        expect(response.body.deployerAddress).to.be.a('string');
+    });
+
     it('should return an error response if the user does not own the token', async () => {
         const userAddress = '0xabcdef1234567890abcdef1234567890abcdef123456789';
         const response = await supertest(server).get(`/token/${userAddress}`);
