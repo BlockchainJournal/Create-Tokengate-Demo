@@ -27,7 +27,7 @@ const abiFilePath = join(__dirname, '../data', 'dilty-abi.json');
 const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
 const provider = new JsonRpcProvider(providerUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
-const gatewayUrl = 'https://gateway.pinata.cloud/ipfs/';
+const gatewayUrl = 'https://ipfs.io/ipfs/';
 
 async function getNFTImageUrlFromTokenUri(tokeUri) {
     const cid = tokeUri.replace('ipfs://','');
@@ -37,6 +37,16 @@ async function getNFTImageUrlFromTokenUri(tokeUri) {
     return obj.image;
 }
 
+
+async function getTokenUriJson(tokenId){
+    const addresses = await getContractAndOwnerAddresses();
+    const contractAddress = addresses.diltyAddress;
+    const contractAbi = require(abiFilePath);
+    const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
+    const tokenUri = await contractInstance.tokenURI(tokenId);
+    const response = await fetch(`${gatewayUrl}${tokenUri.replace('ipfs://','')}`);
+    return await response.json();
+}
 
 async function getNFTImageUrl(tokenCid) {
     if(tokenCid.includes('https://')){
@@ -115,13 +125,13 @@ async function getEnvVars(){
  * @param userAddress, the address of the user to check
  * @returns {Promise<*|number>} that is the tokenId or -1 if not found
  */
-async function verifyTokenOwnership(userAddress){
+async function getTokenId(userAddress){
     const contractAddresses = await getContractAndOwnerAddresses()
     const contractAbi = require(abiFilePath);
     const contractInstance = new ethers.Contract(contractAddresses.diltyAddress, contractAbi, wallet);
     try {
         const tokenId= await contractInstance.getAddressTokenId(userAddress);
-        return tokenId;
+        return Number(tokenId);
     } catch (e) {
         return -1;
     }
@@ -156,11 +166,12 @@ async function mintAndTransfer(recipientAddress) {
 }
 
 module.exports = {
-    verifyTokenOwnership,
+    getTokenId,
     mintAndTransfer,
     getEnvVars,
     fetchPngUrlFromContract,
     getNFTImageUrl,
     getNextTokenId,
     getNFTImageUrlFromTokenUri,
-    getContractAndOwnerAddresses}
+    getContractAndOwnerAddresses,
+    getTokenUriJson}

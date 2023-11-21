@@ -6,7 +6,7 @@ const { task} = require('hardhat/config');
 /*
 Command line example
 
-npx hardhat  diltyUploadPngToIpfsPinata --asset-name "New Dilty" --asset-description "A new NFT published by BCJ" --show-stack-traces
+npx hardhat  diltyUploadPngToIpfsPinata --asset-name "New Dilty Two" --asset-description "A new NFT published by BCJ" --show-stack-traces
 
  */
 
@@ -53,7 +53,7 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
             ipfsData.imageCid = ipfsCid;
             // Declare the IPFS gateway URL that will be used as the value for
             // the image property in the tokenUri JSON metadata
-            const gatewayUrl = 'https://gateway.pinata.cloud/ipfs/'
+            const gatewayUrl = 'https://ipfs.io/ipfs/'
 
             // creat the JSON for the tokenUri and store it on IPFS.
             const ipfMetaJson = {};

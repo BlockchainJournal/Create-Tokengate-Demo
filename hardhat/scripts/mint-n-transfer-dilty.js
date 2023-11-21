@@ -4,7 +4,6 @@ const {ethers} = require("hardhat");
 const fs = require("fs");
 const {join} = require("path");
 
-
 /*
 Sample call:
 RECIPIENT_ADDRESS=0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27 npx hardhat run scripts/mint-n-transfer-dilty.js --network sepolia

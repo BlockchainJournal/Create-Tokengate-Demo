@@ -2,6 +2,14 @@ const fs = require('fs');
 const {join} = require('path');
 const { ethers, utils } = require('hardhat');
 
+/*
+Call sample:
+
+npx hardhat run scripts/deploy-dilty.js --network sepolia
+
+
+ */
+
 /**
  * Deploys the Dilty contract
  * @returns {Promise<{address: *}>} The address of the deployed contract

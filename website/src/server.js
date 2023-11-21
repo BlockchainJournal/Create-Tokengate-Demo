@@ -6,7 +6,7 @@ const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
 const {path, join} = require('path');
 const fs = require('fs');
-const {mintAndTransfer, verifyTokenOwnership, getContractAndOwnerAddresses} = require('./lib/contractHelpers');
+const {mintAndTransfer, getTokenId, getContractAndOwnerAddresses, getTokenUriJson} = require('./lib/contractHelpers');
 
 app.use(bodyParser.json());
 const dotenv = require('dotenv');
@@ -154,8 +154,9 @@ app.get('/token/:userAddress', async (req, res) => {
 
     // verify that the user owns the token
     try {
-        const tokenId = await verifyTokenOwnership(userAddress);
-        res.status(200).json({tokenId})
+        const tokenId = await getTokenId(userAddress);
+        const tokenUriJson = await getTokenUriJson(tokenId);
+        res.status(200).json(tokenUriJson)
     } catch (e) {
         res.status(401).json({error: e.message})
     }

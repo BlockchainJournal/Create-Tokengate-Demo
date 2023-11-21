@@ -51,7 +51,7 @@ function uint8ArrayToBase64(uint8Array) {
     });
 }
 
-async function getTokenId(jwtToken, address) {
+async function getTokenIdJson(jwtToken, address) {
     // Make a fetch request to the server endpoint /token/:userAddress
     try {
         const apiUrl = `/token/${address}`;
@@ -64,9 +64,10 @@ async function getTokenId(jwtToken, address) {
         });
         if (response.status === 200) {
             const data = await response.json();
-            return data.tokenId;
+            return data;
         }
     } catch (e) {
+        console.error(e);
     }
 }
 async function gateUser() {
@@ -112,15 +113,18 @@ async function loginWithMetaMask() {
             if (response.ok) {
                 const data = await response.json();
                 const {jwtToken, address, profile} = data;
-                const tokenId = await getTokenId(jwtToken, address);
+                setLoginToken(jwtToken);
+                const tokenUriJson = await getTokenIdJson(jwtToken, address);
                 setProfile(profile);
                 document.getElementById("loginButton").style.display = "none";
-                document.getElementById("tokenId").innerHTML = 'Token id is: ' + tokenId;
+                document.getElementById("tokenImage").src = tokenUriJson.image;
+                //document.getElementById("tokenId").innerHTML = 'Token id is: ' + tokenUriJson.image;
                 if (!profile) {
                     document.getElementById("loginResponse").innerHTML = `Logged in at address ${address}.<br />Please enter your profile information:`;
                     showProfileUI();
                 } else {
                     hideProfileUI();
+                    document.getElementById("tokenPane").style.display = "block";
                     document.getElementById("loginResponse").innerHTML = `Welcome: ${profile.firstName} ${profile.lastName}<br />Address: ${profile.address}`;
                 }
             } else {
@@ -129,8 +133,8 @@ async function loginWithMetaMask() {
         } else {
             document.getElementById("loginResponse").innerText = "MetaMask is not installed or not connected.";
         }
-    } catch (error) {
-        console.error(error);
+    } catch (e) {
+        console.log(e);
         document.getElementById("loginResponse").innerText = "An error occurred while logging in with MetaMask.";
     }
 }
@@ -177,10 +181,6 @@ async function getContractAddress() {
     }
 }
 
-async function getGatingStatus(ownerAddress) {
-
-}
-
 // TODO get rid of this
 async function processGatingData(ownerAddress) {
     // Access form data
@@ -208,7 +208,6 @@ async function processGatingData(ownerAddress) {
         document.getElementById("gatingResponse").innerText = `${error.message}`
     }
 }
-
 
 async function processProfileData() {
     // Access form data

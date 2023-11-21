@@ -2,6 +2,12 @@ const fs = require('fs');
 const {artifacts} = require('hardhat');
 const {join} = require('path');
 
+/*
+Call sample:
+
+npx hardhat run scripts/extract-dilty-abi.js --network sepolia
+ */
+
 async function extractABI(contractName) {
     // Compile the smart contract (if not already done)
     if (!artifacts.readArtifactSync(contractName)) {

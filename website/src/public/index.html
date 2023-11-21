@@ -12,9 +12,26 @@
         body {
             margin-left: 50px;
         }
+        img {
+            padding: 20px;
+        }
+
+        #tokenGreeting {
+            font-weight: bold;
+            font-size: 16pt;
+        }
 
         #profile {
             display: none;
+        }
+
+        #tokenPane {
+            display: none;
+        }
+
+        #loginResponse{
+            font-weight: bold;
+            font-size: 16pt;
         }
         #tokenResponse{
             font-weight: bold;
@@ -32,16 +49,17 @@
     </script>
 </head>
 <body>
-<h1>MetaMask Login Example</h1>
 <button id="loginButton">Login with MetaMask</button>
-
-<div id="loginResponse"></div>
 <div id="contractAddress"></div>
-
+<hr/>
+<div id="loginResponse"></div>
+<div id="tokenPane">
+<div id="tokenGreeting">Congratulations! You have all the rights and privileges awarded to holders of the DiLTy token!</div>
+<div><img id="tokenImage" /></div>
+</div>
 <div id="profile">
     <h2>Profile information</h2>
     <div id="tokenId"></div>
-    <div><img id="tokenImage" /></div>
     <div id="profileForm">
         <div>
             <label for="firstName">First Name:</label>

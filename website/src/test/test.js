@@ -1,6 +1,7 @@
 const {describe, it} = require("mocha");
 const {expect} = require("chai");
-const {mintAndTransfer, verifyTokenOwnership, fetchPngUrlFromContract, getNFTImageUrl, getNextTokenId, getNFTImageUrlFromTokenUri} = require('../lib/contractHelpers')
+const {mintAndTransfer, getTokenId, fetchPngUrlFromContract, getNFTImageUrl, getNextTokenId, getNFTImageUrlFromTokenUri,
+    getTokenUriJson} = require('../lib/contractHelpers')
 const {join} = require('path');
 const envFilePath = join(__dirname, '../.env'); // Replace '.env' with the actual filename if it's different
 const dotenv = require('dotenv');
@@ -50,14 +51,24 @@ describe('Token Gating tests', () => {
         expect(result).to.match(/^(https?:\/\/)?[^\s]+\.[^\s]+$/);
     })
 
-    it("can verify user token ownership", async () => {
-        const userAddress = "0xADeB8052682aeF1A7B127fC158fAdEd08a19A843";
-        const result = await verifyTokenOwnership(userAddress);
-        expect(result).to.equal(true);
+    it("can getTokenId", async () => {
+        const userAddress = "0x9e4af6fda84260f957ff65e1ee447e522c5e0e27";
+        const result = await getTokenId(userAddress);
+        expect(result).to.be.a('number');
+        expect(result).to.be.greaterThan(0);
+    })
+
+    it("can getTokenUriJson", async () => {
+        const userAddress = "0x9e4af6fda84260f957ff65e1ee447e522c5e0e27";
+        const result = await getTokenId(userAddress);
+        console.log(result);
+        expect(result).to.be.a('number');
+        expect(result).to.be.greaterThan(0);
+        const json = await getTokenUriJson(result);
+        expect(json).to.be.an('object');
     })
 
     it("can mint token and transfer on Ether`", async () => {
         const result = await mintAndTransfer(process.env.RECIPIENT_ADDRESS) ;
-
     }).timeout(5000);
 });
