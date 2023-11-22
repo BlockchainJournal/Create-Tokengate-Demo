@@ -6,12 +6,12 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Dilty02 is ERC721URIStorage, Ownable {
-    uint256 private totalSupply = 0;
+    uint256 private totalSupply = 0; //total number of tokens minted
     mapping(address => uint256) addressTokenIds;
 
     event Minting(string tokenURI, uint256 tokenId);
 
-    constructor() ERC721("Blockchain Journal DiLTy V2", "BCJDLT2") Ownable(msg.sender) {}
+    constructor() ERC721("Blockchain Journal DiLTy V3", "BCJDLT3") Ownable(msg.sender) {}
 
     function getAddressTokenId(address _accountAddress) public view returns (uint256) {
         return addressTokenIds[_accountAddress];
@@ -58,7 +58,7 @@ contract Dilty02 is ERC721URIStorage, Ownable {
             return false;
         }
         uint256 amount = 1;
-        require(totalSupply >= amount, "Not enough tokens. Make sure you use the mint() function to mint a token intended for the recipient before doing the transfer");
+        require(totalSupply >= amount, "Not enough totalSupply available. Make sure you use the mint() function to mint a token intended for the recipient before doing the transfer");
         //if not, then transfer the token to the new address
         _transfer(msg.sender, _to, totalSupply);
         addressTokenIds[_to] = totalSupply;

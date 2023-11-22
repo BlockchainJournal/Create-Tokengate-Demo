@@ -6,8 +6,6 @@ const { ethers, utils } = require('hardhat');
 Call sample:
 
 npx hardhat run scripts/deploy-dilty.js --network sepolia
-
-
  */
 
 /**

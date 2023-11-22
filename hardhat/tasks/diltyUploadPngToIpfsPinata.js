@@ -6,7 +6,7 @@ const { task} = require('hardhat/config');
 /*
 Command line example
 
-npx hardhat  diltyUploadPngToIpfsPinata --asset-name "New Dilty Two" --asset-description "A new NFT published by BCJ" --show-stack-traces
+npx hardhat  diltyUploadPngToIpfsPinata --asset-name "Reselbob Two" --asset-description "A new NFT published by Reselbob" --image-file-path "~/Projects/Create-Tokengate-Demo/hardhat/images/reselbob-02.png" --show-stack-traces
 
  */
 
@@ -22,7 +22,7 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
         const { pinataApiKey, pinataSecretApiKey } = hre.network.config;
 
         // The image that will be posted to IPFS
-        const imageFilePath = taskArgs.imageFilePath
+        const imageFilePath = taskArgs.imageFilePath || join(__dirname, '../images', 'dilty-icon.png');
         //let filePath = join(__dirname, '../images', 'dilty-icon.png');
         // Use the api keys by providing the strings directly
         const pinata = new pinataSDK(pinataApiKey, pinataSecretApiKey );
