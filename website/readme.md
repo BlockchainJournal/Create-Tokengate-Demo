@@ -1,4 +1,10 @@
+# The Token Gating Demonstration Website
+
 ![Under Construction](../errata/under-construction.png)
+
+|For demonstration use only|
+|---|
+|Be advised that the code in this respostiory is intended for demonstration purposes only.  It is not intended for use in a production environment.  The code is provided as-is and the author is not responsible for any damages that may result from its use.  The code is provided under the MIT license.|
 
 # Working with the demonstration website
 
