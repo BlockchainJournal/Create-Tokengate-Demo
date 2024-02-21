@@ -78,7 +78,7 @@ NFT_STORAGE_KEY=<nft.storage API key here>
 ```
 
 
-To run the web server make sure that you are in the `website` directory. Then, execute the following commands:
+To run the web server make sure that you are in the `website` directory. Then, execute the following command to start the web server:
 
 ```bash
 npm start
