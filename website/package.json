@@ -4,8 +4,8 @@
   "description": "Web site for a project that demonstrates how to implement token gating on an EVM compatible.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "npx hardhat src/test"
+    "start": "node ./src/server.js",
+    "test": "npx hardhat ./rc/test"
   },
   "author": "Bob Reselman <reselbob@gmail.com>",
   "license": "MIT",

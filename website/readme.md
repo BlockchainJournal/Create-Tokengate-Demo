@@ -65,3 +65,22 @@ Also, output similar to the following will be saved to the file `dilty-address.j
 
 The file `dilty-address.json` contains the address of the deployed contract as well as the deployer's address.    These addresses are used by the web server to manage token gating activities/   
 
+# Running the web server
+
+The web server is a Node.JS application that uses the Express framework.  The web server is located in the `website` directory.  
+
+Make sure that the `.env` file is set up with the following environment variables:
+
+```bash
+INFURA_API_KEY=<Infura key here>
+SEPOLIA_PRIVATE_KEY=<Sepolia private key here>
+NFT_STORAGE_KEY=<nft.storage API key here>
+```
+
+
+To run the web server make sure that you are in the `website` directory. Then, execute the following commands:
+
+```bash
+npm start
+```
+

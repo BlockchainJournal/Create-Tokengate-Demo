@@ -9,8 +9,9 @@ const fs = require('fs');
 const {mintAndTransfer, getTokenId, getContractAndOwnerAddresses, getTokenUriJson} = require('./lib/contractHelpers');
 
 app.use(bodyParser.json());
+
 const dotenv = require('dotenv');
-dotenv.config({ debug: true });
+dotenv.config({ debug: true, path: join(__dirname, '.env') });
 // Replace this with your own secret key (used to sign JWT tokens)
 const secretKey = 'w87LqcTUMeA7U8v@#yEEZX2KfH@G9mWxxx';
 
