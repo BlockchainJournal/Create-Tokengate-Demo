@@ -26,7 +26,7 @@ contract Dilty02 is ERC721URIStorage, Ownable {
     }
 
     /*
-        * Mints a new token only if the address of _intendedRecipient does not already one,
+        * Mints a new token only if the address of _intendedRecipient does not already have one,
         * otherwise the tokenId of the token associated with the address of the _intendedRecipient
         * is returned.
         * @param _tokenURI the URI of the token

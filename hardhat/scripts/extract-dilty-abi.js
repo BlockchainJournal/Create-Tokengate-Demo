@@ -3,6 +3,9 @@ const {artifacts} = require('hardhat');
 const {join} = require('path');
 
 /*
+The purpose of this script is to extract the ABI of the Dilty contract.
+It will then write the ABI to a file named dilty-abi.json, into the data directory.
+
 Call sample:
 
 npx hardhat run scripts/extract-dilty-abi.js --network sepolia

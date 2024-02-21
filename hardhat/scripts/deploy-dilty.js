@@ -3,6 +3,10 @@ const {join} = require('path');
 const { ethers, utils } = require('hardhat');
 
 /*
+The purpose of this script is to deploy the Dilty contract to the blockchain.
+It will then write the address of the contract to a file in the data directory.
+This file will be used by the website to interact with the contract.
+
 Call sample:
 
 npx hardhat run scripts/deploy-dilty.js --network sepolia
