@@ -1,6 +1,11 @@
 ![Under Construction](../errata/under-construction.png)
 
-This Node.JS project contains the Node.Js scripts and HardHat tasks that are used to deploy the smart contract to the testnet and to publish the NFT to the IPFS.
+|For demonstration use only|
+|---|
+|Be advised that the code in this respostiory is intended for demonstration purposes only.  It is not intended for use in a production environment.  The code is provided as-is and the author is not responsible for any damages that may result from its use.  The code is provided under the MIT license.|
+
+
+This Node.JS project contains the Node.Js scripts and HardHat tasks that are used to deploy the smart contract managing NFT creation to the testnet. Also, this directory contains the HardHat task that publishes the NFT to the IPFS.
 
 
 # Requirements
