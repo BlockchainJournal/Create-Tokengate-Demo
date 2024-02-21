@@ -1,10 +1,7 @@
-![Under Construction](https://buysellgraphic.com/images/graphic_preview/zip_detail/22482_under_construction_signjpg.jpg)
+![Under Construction](../errata/under-construction.png)
 
-This is a demonstration project that shows how to implement a token gating architecture targeted at EVM compatible blockchains.
+This Node.JS project contains the Node.Js scripts and HardHat tasks that are used to deploy the smart contract to the testnet and to publish the NFT to the IPFS.
 
-# What this project does
-
-TO BE PROVIDED
 
 # Requirements
 
@@ -36,12 +33,12 @@ npm install
 This project requires values that are set as environment variables. You can set the environment at the project level by defining those variables in a `.env` file in the project's root directory. The structure of the `.env` file is as follows:
 
 ```bash
-INFURA_API_KEY = <Infura key here>
-SEPOLIA_PRIVATE_KEY = <Sepolia private key here>
-NFT_STORAGE_KEY = <nft.storage API key here>
+INFURA_API_KEY=<Infura key here>
+SEPOLIA_PRIVATE_KEY=<Sepolia private key here>
+NFT_STORAGE_KEY=<nft.storage API key here>
 ```
 
-MORE TO COME
+[MORE TO COME]
 
 # Compiling the project's smart contract
 
@@ -57,7 +54,7 @@ Run the tests declared in the file `./test/Dilty.js`
 npm test
 ```
 
-MORE TO COME
+[MORE TO COME]
 
 # Uploading an image to IPFS
 

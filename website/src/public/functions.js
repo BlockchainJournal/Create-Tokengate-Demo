@@ -76,7 +76,6 @@ async function gateUser() {
         const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
         // ... and choose the first one
         const address = accounts[0];
-        //0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27return address;
         await processGatingData(address)
     }
 }

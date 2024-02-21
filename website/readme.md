@@ -1,12 +1,11 @@
-![Under Construction](https://buysellgraphic.com/images/graphic_preview/zip_detail/22482_under_construction_signjpg.jpg)
+![Under Construction](../errata/under-construction.png)
 
 # Working with the demonstration website
 
-Use Hardhat to compile the code and extract the ABI and bytecode for the smart contract.
+Use the code in the [hardhat directory](../hardhat) to compile the code and extract the ABI and bytecode for the smart contract.
 
 # 1.Compiling the contract
-
-In the `hardhat` directory, above execute the following command to compile the code:
+ Got to the `hardhat` directory and execute the following command to compile the code:
 
 ```bash
  npx hardhat compile

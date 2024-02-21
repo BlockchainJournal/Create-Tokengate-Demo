@@ -5,6 +5,7 @@ const {join} = require('path');
 /*
 The purpose of this script is to extract the ABI of the Dilty contract.
 It will then write the ABI to a file named dilty-abi.json, into the data directory.
+This file will be used by the website to interact with the contract.
 
 Call sample:
 

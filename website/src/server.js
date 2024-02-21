@@ -210,9 +210,14 @@ app.get('/contract', async (req, res) => {
 // Define a route to serve the 'index.html' file
 app.post('/admin', async (req, res) => {
     // Do the token transfer against the EVM blockchain
-    //console.log(req.body);
+
+    // surround with try/catch to handle errors gracefully
+    try {
     const result = await mintAndTransfer(req.body.recipientAddress);
     return res.status(200).json({message: JSON.stringify(req.body, null, 2)});
+    } catch (e) {
+        return res.status(500).json({error: e.message});
+    }
 });
 
 const PORT = process.env.PORT || 3111;

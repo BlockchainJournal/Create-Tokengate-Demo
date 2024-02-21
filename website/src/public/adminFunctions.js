@@ -9,6 +9,10 @@ async function loginAdmin(){
     }
 }
 
+/**
+ *  Get the admin address as the first account in the users MetaMask metamask waller
+ * @returns {Promise<string|*>}
+ */
 async function getAdminAddress(){
     try {
         // Check if MetaMask is installed and connected
