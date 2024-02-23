@@ -8,6 +8,8 @@ const dotenv = require('dotenv');
 const fs = require("fs");
 dotenv.config({ debug: true, path: envFilePath});
 
+const TEST_ADDRESS = "0x5D89a3eA5edd7C09B25995520fC98c8F4020fa15";
+
 describe('Token Gating tests', () => {
 
     it("can get nextTokenId", async () => {
@@ -52,14 +54,14 @@ describe('Token Gating tests', () => {
     })
 
     it("can getTokenId", async () => {
-        const userAddress = "0x9e4af6fda84260f957ff65e1ee447e522c5e0e27";
+        const userAddress = TEST_ADDRESS ;
         const result = await getTokenId(userAddress);
         expect(result).to.be.a('number');
         expect(result).to.be.greaterThan(0);
     })
 
     it("can getTokenUriJson", async () => {
-        const userAddress = "0x9e4af6fda84260f957ff65e1ee447e522c5e0e27";
+        const userAddress = TEST_ADDRESS ;
         const result = await getTokenId(userAddress);
         console.log(result);
         expect(result).to.be.a('number');
@@ -69,6 +71,12 @@ describe('Token Gating tests', () => {
     })
 
     it("can mint token and transfer on Ether`", async () => {
-        const result = await mintAndTransfer(process.env.RECIPIENT_ADDRESS) ;
+        const result = await mintAndTransfer(TEST_ADDRESS) ;
+        expect(result).to.be.an('object');
+        expect(result.tokenId).to.be.greaterThan(0);
+        // expect the txHash not to be empty and to be a hex string
+        expect(result.txHash).to.be.a('string');
+        expect(result.txHash).to.match(/^(0x)?[0-9a-fA-F]+$/);
+        console.log(JSON.stringify(result, null, 2));
     }).timeout(5000);
 });

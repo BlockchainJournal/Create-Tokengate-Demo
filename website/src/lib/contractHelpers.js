@@ -12,6 +12,7 @@ const dotenv = require('dotenv');
 const { pipeline } = require('stream');
 dotenv.config({ debug: true,path: envFilePath })
 const { TextDecoder, TextEncoder } = require('util');
+const contractABI = require("../data/dilty-abi.json");
 const Moralis = require('moralis').default ;
 
 if(!process.env.INFURA_API_KEY) throw new Error('Required environment variable INFURA_API_KEY is missing');
@@ -27,7 +28,8 @@ const abiFilePath = join(__dirname, '../data', 'dilty-abi.json');
 const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
 const provider = new JsonRpcProvider(providerUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
-const gatewayUrl = 'https://ipfs.io/ipfs/';
+//const gatewayUrl = 'https://ipfs.io/ipfs/';
+const gatewayUrl = 'ipfs://';
 
 async function getNFTImageUrlFromTokenUri(tokeUri) {
     const cid = tokeUri.replace('ipfs://','');
@@ -75,15 +77,15 @@ async function getNextTokenId() {
     const addresses = await getContractAndOwnerAddresses();
     const contractAddress = addresses.diltyAddress;
     const contractAbi = require(abiFilePath);
-    const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
+    const contract = new ethers.Contract(contractAddress, contractAbi, provider);
     // Get the token URI for the NFT.
-    const nextTokenId = await contractInstance.getNextTokenId();
+    const nextTokenId = await contract.getNextTokenId();
     return nextTokenId;
 }
 
 async function getTokenData() {
-    const directoryPath = join(__dirname,'../contracts/');
-    const filePath = join(directoryPath, 'tokenuri-data.json');
+    const directoryPath = join(__dirname,'../data/');
+    const filePath = join(directoryPath, 'dilty-ipfs.json');
     // Write the JSON data to the file
     let rslt;
 
@@ -93,10 +95,11 @@ async function getTokenData() {
         console.error('Error reading or parsing the file:', e);
     }
     const jsonObject = JSON.parse(rslt);
-    const ipfsUrl =  await getNFTImageUrl(jsonObject.cid)
+    //const ipfsUrl =  await getNFTImageUrl(jsonObject.metadataCid)
     //const ipfsUrl =  jsonObject.url.replace('/metadata.json','');
-    const ipfsCid =  jsonObject.cid;
-    return {ipfsUrl, ipfsCid}
+    //const ipfsCid =  jsonObject.metadataCid;
+    //return {ipfsUrl, ipfsCid}
+    return jsonObject;
 }
 async function getContractAndOwnerAddresses(){
     const filePath = join(__dirname, '../data', 'dilty-addresses.json');
@@ -128,9 +131,11 @@ async function getEnvVars(){
 async function getTokenId(userAddress){
     const contractAddresses = await getContractAndOwnerAddresses()
     const contractAbi = require(abiFilePath);
-    const contractInstance = new ethers.Contract(contractAddresses.diltyAddress, contractAbi, wallet);
+    ///const contractInstance = new ethers.Contract(contractAddresses.diltyAddress, contractAbi, wallet);
+    const contract = new ethers.Contract(contractAddresses.diltyAddress, contractABI, provider);
     try {
-        const tokenId= await contractInstance.getAddressTokenId(userAddress);
+        const tokenId= await contract.getAddressTokenId(userAddress);
+        //const tokenId= await contractInstance.getAddressTokenId(userAddress);
         return Number(tokenId);
     } catch (e) {
         return -1;
@@ -142,23 +147,26 @@ async function mintAndTransfer(recipientAddress) {
     const contractAddress = addresses.diltyAddress;
     const contractAbi = require(abiFilePath);
     const obj = await getTokenData();
-    const tokenUri = obj.ipfsUrl
-
+    const tokenUri = `${gatewayUrl}${obj.metadataCid}`;
+    const contract = new ethers.Contract(contractAddress, contractABI, provider);
     const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
     //DO THE MINT
     try {
         // Call the mint function with a token URI
-        const result = await contractInstance.mint(tokenUri);
+        const result = await contractInstance.mint(tokenUri, recipientAddress);
         console.log('Mint result:', result);
     } catch (error) {
         console.error('Error calling the mint function:', error);
     }
+    const tokenId = await contract.getNextTokenId();
     //DO THE TRANSFER
     try {
         // Call the transfer function with a token URI
         const result = await contractInstance.transfer(recipientAddress);
+        const txHash = result.hash;
         console.log('Transfer result:', result);
-        return result;
+        const obj = {txHash, tokenId: Number(tokenId.toString()), recipientAddress,tokenUri,contractAddress}
+        return obj;
     } catch (error) {
         console.error('Error calling the Transfer function:', error);
     }
