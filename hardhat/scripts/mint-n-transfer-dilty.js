@@ -43,7 +43,7 @@ async function mintAndTransferNFT() {
         const newTokenId = await contract.getNextTokenId();
         console.log('newTokenId:', Number(newTokenId.toString()));
 
-        console.log('Transferring token to :', newTokenId.toString());
+        console.log('Transferring token as ID :', newTokenId.toString());
         const recipientAddress = process.env.RECIPIENT_ADDRESS
         // Turn on if you want to see the transfer output
         //const result2 = await contractInstance.transfer(recipientAddress);

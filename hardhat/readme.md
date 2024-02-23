@@ -68,13 +68,13 @@ CONTRACT_NAME=<CONTRACT_NAME> npx hardhat run scripts/deploy-dilty.js --network 
 
 Example:
 ```bash
-CONTRACT_NAME=Dilty05 npx hardhat run scripts/deploy-dilty.js --network sepolia
+CONTRACT_NAME=Dilty07 npx hardhat run scripts/deploy-dilty.js --network sepolia
 ```
 You'll get output similar to the following: 
 
 ```text
 Compiled 1 Solidity file successfully (evm target: paris).
-Deploying contract with the contract name: Dilty05
+Deploying contract with the contract name: Dilty07
 Dilty address: 0xe2Da5E9FbC9EE01c866167558f9f521B2a09a236
 Copying /Users/guest/Projects/Create-Tokengate-Demo/hardhat/scripts/data/dilty-addresses.json to /Users/guest/Projects/Create-Tokengate-Demo/website/src/data/dilty-addresses.json
 ```
@@ -84,7 +84,7 @@ The script will inspect the `./contracts` directory for any files with the `.sol
 The contract name is defined in the `.sol` file as follows:
 
 ```solidity
-contract Dilty05 is ERC721URIStorage, Ownable {
+contract Dilty07 is ERC721URIStorage, Ownable {
     uint256 private totalSupply = 0; //total number of tokens minted
     mapping(address => uint256) addressTokenIds;
 
@@ -94,7 +94,7 @@ contract Dilty05 is ERC721URIStorage, Ownable {
   .
 }
 ```
-In the case above the contract name is `Dilty05`.
+In the case above the contract name is `Dilty07`.
 
 
 # Extracting the ABI to a file
@@ -109,7 +109,7 @@ WHERE:
 
 Example:
 ```bash 
-CONTRACT_NAME=Dilty05 npx hardhat run scripts/extract-dilty-abi.js --network sepolia
+CONTRACT_NAME=Dilty07 npx hardhat run scripts/extract-dilty-abi.js --network sepolia
 ```
 
 You'll get output similar to the following: 
@@ -151,7 +151,7 @@ Writing to /Users/guest/Projects/Create-Tokengate-Demo/hardhat/scripts/data/dilt
   "imageCid": "QmZSiqGx94hsCNs2VCoYHvme21XgkoJak56XdfPFJKSzAy",
   "metadataCid": "QmY2jfUar36iDZEqrd3tbyrykN1Y7XWW69VcFiCxadbzWe"
 }
-Copying /Users/guest/Projects/Create-Tokengate-Demo/hardhat/scripts/data/dilty-ipfs.json to /Users/reselbob/Projects/Create-Tokengate-Demo/website/src/data/dilty-ipfs.json
+Copying /Users/guest/Projects/Create-Tokengate-Demo/hardhat/scripts/data/dilty-ipfs.json to /Users/guest/Projects/Create-Tokengate-Demo/website/src/data/dilty-ipfs.json
 ```
 
 You're output will be different according to the file system under which you are running the command.
@@ -189,7 +189,7 @@ contractAddress: 0xe2Da5E9FbC9EE01c866167558f9f521B2a09a236
 Contract Name: Blockchain Journal DiLTy V5
 Minting NFT...
 newTokenId: 2
-Transferring token to : 2
+Transferring token to as ID : 2
 Result: {
   "tokenId": 2,
   "recipientAddress": "0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27",
@@ -199,10 +199,12 @@ Result: {
 ```
 # Viewing the NFT on OpenSea TestNet
 
-You can view the NFT on OpenSea TestNet by visiting the following URL in a browser:
+After you've waited a few minutes for the transaction to make it through the Ethereum network (yes, waiting is really important!), you can view the NFT on OpenSea TestNet.
+
+You can view the NFT on the OpenSea TestNet by visiting the following URL in a browser:
 
 ```text
-https://testnets.opensea.io/assets/<RECIPIENT_ADDRESS>/<TOKEN_ID>
+https://testnets.opensea.io/assets/sepolia/<RECIPIENT_ADDRESS>/<TOKEN_ID>
 ```
 
 WHERE

@@ -5,13 +5,13 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Dilty05 is ERC721URIStorage, Ownable {
+contract Dilty07 is ERC721URIStorage, Ownable {
     uint256 private totalSupply = 0; //total number of tokens minted
     mapping(address => uint256) addressTokenIds;
 
     event Minting(string tokenURI, uint256 tokenId);
 
-    constructor() ERC721("Blockchain Journal DiLTy V5", "BCJDLT5") Ownable(msg.sender) {}
+    constructor() ERC721("Blockchain Journal DiLTy V7", "BCJDLT7") Ownable(msg.sender) {}
 
     function getAddressTokenId(address _accountAddress) public view returns (uint256) {
         return addressTokenIds[_accountAddress];
