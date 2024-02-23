@@ -40,15 +40,17 @@ async function mintAndTransferNFT() {
         const contractAbi = require("./data/dilty-abi.json");
         const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
         const result = await contractInstance.mint(tokenUri, process.env.RECIPIENT_ADDRESS);
+
         const newTokenId = await contract.getNextTokenId();
         console.log('newTokenId:', Number(newTokenId.toString()));
 
         console.log('Transferring token as ID :', newTokenId.toString());
         const recipientAddress = process.env.RECIPIENT_ADDRESS
         // Turn on if you want to see the transfer output
-        //const result2 = await contractInstance.transfer(recipientAddress);
+        const result2 = await contractInstance.transfer(recipientAddress);
+        const txHash = result2.hash;
         //console.log('Transfer output:: ', JSON.stringify(result2, null, 2));
-        const obj = {tokenId: Number(newTokenId.toString()), recipientAddress,tokenUri,contractAddress}
+        const obj = {txHash, transtokenId: Number(newTokenId.toString()), recipientAddress,tokenUri,contractAddress}
 
         console.log(`Result: ${JSON.stringify(obj, null, 2)}`);
     } catch (e) {

@@ -191,6 +191,7 @@ Minting NFT...
 newTokenId: 2
 Transferring token to as ID : 2
 Result: {
+  "txHash": "0x8466f9f20ef93c40902b3c0c3ea03d477dcf4c9c6ec58b19ebd6f54c8a03d6a9",
   "tokenId": 2,
   "recipientAddress": "0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27",
   "tokenUri": "ipfs://QmNjCU8jtB8wtm2ywFoXkiPifKh2sDT1GBZKTQTGGvTdLg",
