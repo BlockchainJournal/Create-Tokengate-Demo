@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node ./src/server.js",
-    "test": "npx hardhat ./src/test"
+    "test": "mocha src/test/*.js"
   },
   "author": "Bob Reselman <reselbob@gmail.com>",
   "license": "MIT",
