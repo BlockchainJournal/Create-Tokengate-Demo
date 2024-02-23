@@ -149,13 +149,16 @@ app.post('/login', verifySignature, (req, res) => {
  * endpoint to retrieve token gating by user
  */
 app.get('/token/:userAddress', async (req, res) => {
-    const tokenData = await verifyJwtToken(req, res)
     // get the user address from the request URL
     const userAddress = req.params.userAddress;
 
     // verify that the user owns the token
     try {
         const tokenId = await getTokenId(userAddress);
+        if(tokenId === -1) {
+            return res.status(403).json({error: `User at address ${userAddress} does not own a token`});
+        }
+
         const tokenUriJson = await getTokenUriJson(tokenId);
         res.status(200).json(tokenUriJson)
     } catch (e) {
@@ -196,12 +199,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Define a route to serve the 'index.html' file
+// Define a route to serve the 'admin.html' file
 app.get('/admin', (req, res) => {
     res.sendFile(join(__dirname, 'public', 'admin.html'));
 });
 
-// Define a route to serve the 'index.html' file
+
 app.get('/contract', async (req, res) => {
     // return the JSON by calling the function getContractAndOwnerAddresses()
     const json = await getContractAndOwnerAddresses();
@@ -215,7 +218,7 @@ app.post('/admin', async (req, res) => {
     // surround with try/catch to handle errors gracefully
     try {
     const result = await mintAndTransfer(req.body.recipientAddress);
-    return res.status(200).json({message: JSON.stringify(req.body, null, 2)});
+    return res.status(200).json({message: JSON.stringify(result, null, 2)});
     } catch (e) {
         return res.status(500).json({error: e.message});
     }

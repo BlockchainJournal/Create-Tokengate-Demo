@@ -50,7 +50,7 @@ npm install
 
 This project requires values that are set as environment variables. You can set the environment at the project level by defining those variables in a `.env` file in the project's root directory. The structure of the `.env` file is as follows:
 
-```bash
+```env
 INFURA_API_KEY=<Infura key here> // used to access the Seoplia testnet
 SEPOLIA_PRIVATE_KEY=<Sepolia private key here> // used to deploy the smart contract to the Seoplia testnet
 ALCHEMY_API_KEY=<Alchemy key here> // used by HardHat as the provider to the Sepolia testnet

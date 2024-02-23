@@ -44,13 +44,15 @@ describe('Token Gating tests', () => {
 
         const result = await getNFTImageUrl(ipfsObj.imageCid);
         expect(result).to.be.a("string");
-        expect(result).to.match(/^(https?:\/\/)?[^\s]+\.[^\s]+$/);
+        const regex = /ipfs:\/\/(.+)/;
+        expect(result).to.match(regex);
 
     })
     it("can extract png from contract", async () => {
-        const result = await fetchPngUrlFromContract(5)
+        const result = await fetchPngUrlFromContract(1);
         expect(result).to.be.a("string");
-        expect(result).to.match(/^(https?:\/\/)?[^\s]+\.[^\s]+$/);
+        const regex = /ipfs:\/\/(.+)/;
+        expect(result).to.match(regex);
     })
 
     it("can getTokenId", async () => {

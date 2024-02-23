@@ -28,12 +28,12 @@ const abiFilePath = join(__dirname, '../data', 'dilty-abi.json');
 const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
 const provider = new JsonRpcProvider(providerUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
-//const gatewayUrl = 'https://ipfs.io/ipfs/';
+const ipfsProxyUrl = 'https://ipfs.io/ipfs/';
 const gatewayUrl = 'ipfs://';
 
 async function getNFTImageUrlFromTokenUri(tokeUri) {
     const cid = tokeUri.replace('ipfs://','');
-    const response = await fetch(`${gatewayUrl}${cid}`);
+    const response = await fetch(`${ipfsProxyUrl}${cid}`);
     const json = await response.text();
     const obj = JSON.parse(json);
     return obj.image;
@@ -46,7 +46,8 @@ async function getTokenUriJson(tokenId){
     const contractAbi = require(abiFilePath);
     const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
     const tokenUri = await contractInstance.tokenURI(tokenId);
-    const response = await fetch(`${gatewayUrl}${tokenUri.replace('ipfs://','')}`);
+    const ipfsUri = 'https://ipfs.io/ipfs/';
+    const response = await fetch(`${ipfsUri}${tokenUri.replace('ipfs://','')}`);
     return await response.json();
 }
 
