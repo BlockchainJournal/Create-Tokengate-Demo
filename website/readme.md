@@ -36,6 +36,6 @@ To start the web server, run the following command:
 npm start
 ```
 
-#Using the demonstration website
+# Using the demonstration website
 
 [TO BE PROVIDED]
