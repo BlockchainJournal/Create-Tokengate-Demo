@@ -17,8 +17,8 @@ The order by which the tasks and scripts are run is as follows:
 - `./scripts/extract-dilty-abi.js`
 - `./tasks/diltyMintAndTransferNft.js`
 
-However, before you can run the tasks and scripts, you'll need a `.env` file in the root of this `hardhat` directory. The contentes of the `.env`
-file are described in the section "Setting up the `.env` file" below. Click this link to read the section in detail.
+However, before you can run the tasks and scripts, you'll need a `.env` file in the root of this `hardhat` directory. The contents of the `.env`
+file are described in the section titled "Setting up the `.env` file" below. Click [this link](#setting-up-the-env-file) to read the section in detail.
 
 
 # Requirements
