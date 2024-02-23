@@ -11,45 +11,53 @@ RECIPIENT_ADDRESS=0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27 npx hardhat run scr
  */
 async function mintAndTransferNFT() {
     try {
-        if(!process.env.RECIPIENT_ADDRESS )throw new Error('Required environment variable RECIPIENT_ADDRESS is missing');
-        console.log('RECIPIENT_ADDRESS:', process.env.RECIPIENT_ADDRESS);
-        const contractAbi = require("./data/dilty-abi.json");
-
-        const [deployer] = await ethers.getSigners();
-        // get the contract address from the file
         const directoryPath = join(__dirname, './data');
         let filePath = join(directoryPath, 'dilty-addresses.json');
-        const jsonAddress = fs.readFileSync(filePath, 'utf8');
-        const contractAddress = JSON.parse(jsonAddress).diltyAddress;
+        const json = fs.readFileSync(filePath, 'utf8');
+        const contractAddress = JSON.parse(json).diltyAddress;
+        const contractABI = require("./data/dilty-abi.json");
 
+        const provider = new JsonRpcProvider(infuraUrl);
+        const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+        console.log("contractAddress:", contractAddress);
+
+        const contractName = await contract.name();
+        console.log("Contract Name:", contractName);
+
+
+        // Get the IPFS metadata CID
         filePath = join(directoryPath, 'dilty-ipfs.json');
         const jsonIpfs = fs.readFileSync(filePath, 'utf8');
         const metadataCid = JSON.parse(jsonIpfs).metadataCid;
         const gatewayUrl = 'ipfs://';
         const signer = new ethers.Wallet(privateKey);
-        const provider = new JsonRpcProvider(infuraUrl);
         const tokenUri = `${gatewayUrl}${metadataCid}`;
         const wallet = new ethers.Wallet(privateKey, provider);
+
+
+        console.log('Minting NFT...');
+        const contractAbi = require("./data/dilty-abi.json");
         const contractInstance = new ethers.Contract(contractAddress, contractAbi, wallet);
-        const result = await contractInstance.mint(tokenUri,  process.env.RECIPIENT_ADDRESS);
-        const nextTokenId = await contractInstance.getNextTokenId();
+        const result = await contractInstance.mint(tokenUri, process.env.RECIPIENT_ADDRESS);
+        const newTokenId = await contract.getNextTokenId();
+        console.log('newTokenId:', Number(newTokenId.toString()));
 
-        console.log('NFT minted successfully!');
-        console.log('Transaction Hash:', result.hash);
+        console.log('Transferring token to :', newTokenId.toString());
         const recipientAddress = process.env.RECIPIENT_ADDRESS
-        //const recipientAddress = "0x9e4aF6FDa84260f957Ff65E1EE447E522C5E0e27";
-        // Transfer the ERC-721 token to the recipient
-        const tx = await contractInstance["transfer(address)"](
-            recipientAddress
-        );
+        // Turn on if you want to see the transfer output
+        //const result2 = await contractInstance.transfer(recipientAddress);
+        //console.log('Transfer output:: ', JSON.stringify(result2, null, 2));
+        const obj = {tokenId: Number(newTokenId.toString()), recipientAddress,tokenUri,contractAddress}
 
-
-        await tx.wait();
-        console.log(`Transferred NFT with token ID ${Number(nextTokenId)-1} to ${recipientAddress} with Token URI ${tokenUri} at contract address ${contractAddress}`);
-
-    } catch (error) {
-        console.error("Error transferring NFT:", error);
+        console.log(`Result: ${JSON.stringify(obj, null, 2)}`);
+    } catch (e) {
+        console.error('Error minting and transferring NFT:', e);
     }
 }
 
-mintAndTransferNFT();
+mintAndTransferNFT()
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    })

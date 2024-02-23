@@ -4,6 +4,13 @@ const pinataSDK = require('@pinata/sdk');
 const { task} = require('hardhat/config');
 
 /*
+The purpose of this script is to upload an asset to IPFS using the Pinata service.
+
+Options:
+    --image-file-path: The exact path to the image file of the asset to upload to IPFS
+    --asset-name: The name of the asset being uploaded to IPFS
+    --asset-description: The description of the asset being uploaded to IPFS
+
 Command line example
 
 npx hardhat  diltyUploadPngToIpfsPinata --asset-name "Reselbob Two" --asset-description "A new NFT published by Reselbob" --image-file-path "~/Projects/Create-Tokengate-Demo/hardhat/images/reselbob-02.png" --show-stack-traces

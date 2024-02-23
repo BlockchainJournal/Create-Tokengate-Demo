@@ -9,7 +9,7 @@ This file will be used by the website to interact with the contract.
 
 Call sample:
 
-npx hardhat run scripts/extract-dilty-abi.js --network sepolia
+CONTRACT_NAME=Dilty05 npx hardhat run scripts/extract-dilty-abi.js --network sepolia
  */
 
 async function extractABI(contractName) {
@@ -27,7 +27,11 @@ async function extractABI(contractName) {
 
 // Usage of the extractABI function
 async function main() {
-    const tokenABI = await extractABI('Dilty02'); // Use the contract name, not command-line style options
+    // Error is the environment variable is not set CONTRACT_NAME is not set
+    if (!process.env.CONTRACT_NAME) {
+        throw new Error('CONTRACT_NAME environment variable is not set');
+    }
+    const tokenABI = await extractABI(process.env.CONTRACT_NAME); // Use the contract name defined in the environment variable
     const directoryPath = join(__dirname, './data');
     // Create the directory if it doesn't exist
     if (!fs.existsSync(directoryPath)) {
@@ -54,4 +58,8 @@ async function main() {
     fs.copyFileSync(filePath, websiteJsonFilePath);
 }
 
-main();
+main()
+    .catch((error) => {
+    console.error(error);
+    process.exit(1);
+})

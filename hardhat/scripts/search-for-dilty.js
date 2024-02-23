@@ -3,6 +3,13 @@ const fs = require("fs");
 const {join} = require("path");
 const  {ethers, JsonRpcProvider} = require("ethers");
 
+/*
+
+Sample call:
+
+npx hardhat run scripts/search-for-dilty.js --network sepolia
+ */
+
 async function searchContract() {
     try {
         const directoryPath = join(__dirname, './data');
@@ -14,6 +21,8 @@ async function searchContract() {
         const provider = new JsonRpcProvider(infuraUrl);
         const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
+        console.log("contractAddress:", contractAddress);
+
         const contractName = await contract.name();
         console.log("Contract Name:", contractName);
         const nextTokenId = await contract.getNextTokenId();
@@ -23,4 +32,8 @@ async function searchContract() {
     }
 }
 
-searchContract();
+searchContract()    .catch((error) => {
+    console.error(error);
+    process.exit(1);
+});
+

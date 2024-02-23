@@ -1,15 +1,22 @@
 const fs = require('fs');
 const {join} = require('path');
-const { ethers, utils } = require('hardhat');
+const { ethers} = require('hardhat');
 
 /*
 The purpose of this script is to deploy the Dilty contract to the blockchain.
-It will then write the address of the contract to a file in the data directory.
+
+In this case, Solidity smart contract in the directory name contracts and in the file
+name dilty02.sol. The contract is deployed to the blockchain using the method
+named, deployDiltyContract().
+
+The method will then write the address of the contract to a file in the data directory.
 This file will be used by the website to interact with the contract.
+
+You can view the contract by address at https://sepolia.etherscan.io/.
 
 Call sample:
 
-npx hardhat run scripts/deploy-dilty.js --network sepolia
+CONTRACT_NAME=Dilty05 npx hardhat run scripts/deploy-dilty.js --network sepolia
  */
 
 /**
@@ -20,7 +27,12 @@ async function deployDiltyContract() {
 
     const [deployer] = await ethers.getSigners();
 
-    const contract = await ethers.deployContract("Dilty02");
+    // Error is the environment variable is not set CONTRACT_NAME is not set
+    if (!process.env.CONTRACT_NAME) {
+        throw new Error('CONTRACT_NAME environment variable is not set');
+    }
+    console.log(`Deploying contract with the contract name: ${process.env.CONTRACT_NAME}`);
+    const contract = await ethers.deployContract(process.env.CONTRACT_NAME);
     console.log("Dilty address:", await contract.getAddress());
 
     const data = {diltyAddress: await contract.getAddress(), deployerAddress: deployer.address}
@@ -58,3 +70,6 @@ deployDiltyContract()
         console.error(error);
         process.exit(1);
     })
+
+// export the function for testing
+module.exports = { deployDiltyContract };

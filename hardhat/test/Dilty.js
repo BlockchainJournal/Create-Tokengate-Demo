@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const {deployDiltyContract} = require('../scripts/deploy-dilty')
-const tokenName = "Dilty";
+const { ethers} = require('hardhat');
+const tokenName = "Dilty02";
 
 describe(`${tokenName} contract test`, function () {
   it("Deployment should assign the total supply of tokens to the owner", async function () {
