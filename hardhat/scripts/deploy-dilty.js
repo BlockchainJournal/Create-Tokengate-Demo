@@ -16,7 +16,7 @@ You can view the contract by address at https://sepolia.etherscan.io/.
 
 Call sample:
 
-CONTRACT_NAME=Dilty05 npx hardhat run scripts/deploy-dilty.js --network sepolia
+CONTRACT_NAME=Dilty07 npx hardhat run scripts/deploy-dilty.js --network sepolia
  */
 
 /**
