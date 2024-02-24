@@ -21,6 +21,11 @@ contract Dilty07 is ERC721URIStorage, Ownable {
         return totalSupply + 1;
     }
 
+    /*
+        * Checks if the address has a token
+        * @param addr the address to check
+        * @return true if the address has a token, false if not
+    */
     function hasAddress(address addr) public view returns (bool) {
         return addressTokenIds[addr] != 0;
     }

@@ -19,4 +19,6 @@ The general workflow is shown in the figure below.
 
 Server side admin code interacts with the smart contract on the blockchain to generate the NFT that is used in the token gating process. The token is then transferred to the user using the admin web page running under the project's web server.  Once the NFT is transferred to the user, that user will have permissions granted by server side logic.
 
-[MORE TO COME]
+The way the website works is that the user logs in using MetaMask as the authentication mechanism. Behind the scenes, the web server checks the smart contract on the EVM compatible blockchain, asking the contract if the user (by address) was issued an NFT. (The smart contract has custom logic that keeps track of the user addresses to which its NFTs have been assigned). If the user has the NFT, that fact is reported to the calling web page and the web page executes a behavior tha is special to the given owner of the NFT. (See the figure below.)
+
+![General Workflow](./errata/webserver-01.png)
