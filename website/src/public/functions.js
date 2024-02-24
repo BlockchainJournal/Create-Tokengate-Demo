@@ -116,8 +116,10 @@ async function loginWithMetaMask() {
                 const tokenUriJson = await getTokenIdJson(jwtToken, address);
                 setProfile(profile);
                 document.getElementById("loginButton").style.display = "none";
-                document.getElementById("tokenImage").src = tokenUriJson.image;
-                //document.getElementById("tokenId").innerHTML = 'Token id is: ' + tokenUriJson.image;
+                if(tokenUriJson){
+                    document.getElementById("tokenImage").src = tokenUriJson.image;
+                    document.getElementById("tokenGreeting").style.visibility = "visible";
+                }
                 if (!profile) {
                     document.getElementById("loginResponse").innerHTML = `Logged in at address ${address}.<br />Please enter your profile information:`;
                     showProfileUI();
