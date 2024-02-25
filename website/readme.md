@@ -36,7 +36,7 @@ npm start
 
 # Using the demonstration website
 
-In order to get this demonstration website to work you must have created the smart contract that manages NFT minting. You do this by following the process described in the [hardhat directory](../hardhat).
+**IMPORTANT:** In order to get this demonstration website to work you must have created the smart contract that manages NFT minting. You do this by following the process described in the [hardhat directory](../hardhat).
 
 Also, this demonstration website requires that you have MetaMask installed in your browser and that MetaMask in bound to at least two different user addresses. Also, MetaMask must be bound to the Sepolia testnet. In addition, the `.env` file must be created and configured as described above.
 
