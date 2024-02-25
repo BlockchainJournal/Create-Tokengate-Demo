@@ -18,8 +18,8 @@ The `.env` file should contain the following:
 
 ```env
 INFURA_API_KEY=<Infura key here> // used to access the Seoplia testnet
-SEPOLIA_PRIVATE_KEY=<Sepolia private key here> // This is the private key of the account that will deploy the smart contract
-ADMIN_PRIVATE_KEY==<Admin private key here> // This is the private key of the account that will deploy the smart contract
+SEPOLIA_PRIVATE_KEY=<Sepolia private key here> // This is the private key of the account that manages the smart contract that gates access to the website 
+ADMIN_PRIVATE_KEY==<Admin private key here> // This is the private key of the account will mint and transfer NFTs
 PINATA_API_KEY=<Pinata API key here>
 PINATA_SECRET_API_KEY=<Pinata secret here>
 ```

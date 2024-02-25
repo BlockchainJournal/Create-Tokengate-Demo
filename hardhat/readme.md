@@ -58,7 +58,7 @@ The configuration of the `.env` file is as follows:
 
 ```env
 INFURA_API_KEY=<Infura key here> // used to access the Seoplia testnet
-SEPOLIA_PRIVATE_KEY=<Sepolia private key here> // This is the private key of the account that will deploy the smart contract
+SEPOLIA_PRIVATE_KEY=<Sepolia private key here> // This is the private key of the account that will work with the smart contract that manages the token.
 ALCHEMY_API_KEY=<Alchemy key here> // used by HardHat as the provider to the Sepolia testnet
 PINATA_API_KEY=<Pinata API key here>
 PINATA_SECRET_API_KEY=<Pinata secret here>
