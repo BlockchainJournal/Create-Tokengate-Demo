@@ -1,5 +1,5 @@
 # Logs
-.DS_Store
+.DS_Store›
 .idea
 hardhat/.env
 hardhat/scripts/dilty-abi.json

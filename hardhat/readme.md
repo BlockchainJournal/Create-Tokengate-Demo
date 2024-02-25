@@ -48,7 +48,13 @@ npm install
 
 # Setting up the `.env` file
 
-This project requires values that are set as environment variables. You can set the environment at the project level by defining those variables in a `.env` file in the project's root directory. The structure of the `.env` file is as follows:
+YHou need to create and configure a `.env` file in the root of the `hardhat` directory.
+
+![Website env location](../errata/hardhat-env-01.png)
+
+The `.env` file contains the environment variables that are used by the scripts and tasks in the `hardhat` directory.
+
+The configuration of the `.env` file is as follows:
 
 ```env
 INFURA_API_KEY=<Infura key here> // used to access the Seoplia testnet

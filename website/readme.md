@@ -10,7 +10,11 @@ In order get this site up and running, first you must execute the tasks in the [
 
 Once tasks in the [hardhat directory](../hardhat) are complete, you can run the web server to see the demonstration website in action.
 
-Also, be advised the before you can run the website you must have a `.env` file in the root of the website directory.  The `.env` file should contain the following:
+Also, be advised the before you can run the website you must have a `.env` file in the `./src` directory of the website directory.
+
+![Website env location](../errata/website-env-01.png)
+
+The `.env` file should contain the following:
 
 ```env
 INFURA_API_KEY=<Infura key here> // used to access the Seoplia testnet
