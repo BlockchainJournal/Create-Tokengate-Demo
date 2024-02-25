@@ -60,7 +60,7 @@ If these conditions are not met, the demonstration website will not work. Howeve
 
 **Step 5:** Fill out the form and click "Submit User Profile".
 
-![Step 5](../errata/webui/tg-04.png)
+![Step 5](../errata/webui/tg-04a.png)
 
 **Step 6:** Refresh the web page and log in again using the same address with MetaMask.
 
