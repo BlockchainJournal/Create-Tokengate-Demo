@@ -1,6 +1,4 @@
-# The Token Gating Demonstration Website
-
-![Under Construction](../errata/under-construction.png)
+# Using the Token Gating Demonstration Website
 
 |For demonstration use only|
 |---|
