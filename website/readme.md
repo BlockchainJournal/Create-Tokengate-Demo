@@ -38,4 +38,73 @@ npm start
 
 # Using the demonstration website
 
-[TO BE PROVIDED]
+In order to this demonstration website to work you must have created the smart contract that manages NFT minting following the process described in the [hardhat directory](../hardhat).
+
+Also, this demonstration website requires that you have MetaMask installed in your browser and that MetaMask in bound to at least two user addresses on the Sepolia testnet. 
+
+**Step 1:**  Navigate to the website in your browser.  The website is located at `http://localhost:3111`.
+
+**Step 2:**  Go to MetaMask and switch to the first of the addresses on Sepolia.
+
+![Step 2](../errata/webui/tg-01.png)
+
+**Step 3:**  Go back to the webpage a click the "Login with MetaMask" button.  This will cause MetaMask to prompt you to sign a message.  Click "Sign" to sign the message.
+
+![Step 3](../errata/webui/tg-02.png)
+
+**Step 4:**  Once you've logged in the web page will display a user profile form.
+
+![Step 4](../errata/webui/tg-03.png)
+
+**Step 5:** Fill out the form and click "Submit User Profile".
+
+![Step 5](../errata/webui/tg-04.png)
+
+**Step 6:** Refresh the web page and log in again using the same address with MetaMask.
+
+![Step 6](../errata/webui/tg-05.png)
+
+**Step 7:** The user's name information and user address will be displayed on the web page.
+
+![Step 7](../errata/webui/tg-06.png)
+
+**Step 8:** Take note of the second address in MetaMask.  This is the address that will be gated.
+
+![Step 8](../errata/webui/tg-07.png)
+
+**Step 9:** To back to the first address in MetaMask.
+
+![Step 9](../errata/webui/tg-09.png)
+
+**Step 11:** Go to the Admin webpage on the website at `http://localhost:3111/admin` and enter the Admin Password, `admin123` (1).
+The token gating form will be displayed.  Enter the address of the user to be gated (2) which is the second user address. Then click "Create Gating Token" button (3).
+
+![Step 11](../errata/webui/tg-11.png)
+
+**Step 12:** A confirmation message will appear at the bottom of the form.
+
+![Step 12](../errata/webui/tg-12.png)
+
+**Step 13:** Change the second address in MetaMask which is the address of the user that has been gated.
+
+![Step 13](../errata/webui/tg-13.png)
+
+**Step 14:** Refresh the web page to `http://localhost:3111/` and log in using MetaMask with the second user address that has been gated.  
+
+![Step 14](../errata/webui/tg-14.png)
+
+**Step 15:** Fill in the profile form for the second user address and click "Submit User Profile".
+
+![Step 15](../errata/webui/tg-15.png)
+
+**Step 16:** A confirmation message will appear at the bottom of the form.
+
+![Step 16](../errata/webui/tg-16.png)
+
+**Step 17:** Refresh the web page to `http://localhost:3111/` and log in using MetaMask with the second user address that has been gated.
+
+![Step 17](../errata/webui/tg-17.png)
+
+**Step 18:** The gating token will be displayed on the web page. Right now the only special behavior is that the gating token is displayed.  In the future, the gating token will be used to provide special permissions to the user.
+
+![Step 18](../errata/webui/tg-18.png)
