@@ -67,6 +67,8 @@ task('diltyUploadPngToIpfsPinata', taskDescription)
             ipfMetaJson.name = metadata.name;
             ipfMetaJson.description = metadata.description;
             ipfMetaJson.image = `${gatewayUrl}${ipfsCid}`;
+            // try adding a new field
+            ipfMetaJson.level = 2;
 
             // Use the pinata SDK to upload the TokenUri JSON to IPFS
             result = await pinata.pinJSONToIPFS(ipfMetaJson);

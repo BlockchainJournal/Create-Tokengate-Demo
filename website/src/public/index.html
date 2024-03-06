@@ -12,13 +12,12 @@
         body {
             margin-left: 50px;
         }
+
         img {
             padding: 20px;
         }
 
         #tokenGreeting {
-            font-weight: bold;
-            font-size: 16pt;
             visibility: hidden; /* Makes the element invisible but still takes up space */
         }
 
@@ -27,14 +26,17 @@
         }
 
         #tokenPane {
+            font-weight: bold;
+            font-size: 16pt;
             display: none;
         }
 
-        #loginResponse{
+        #loginResponse {
             font-weight: bold;
             font-size: 16pt;
         }
-        #tokenResponse{
+
+        #tokenResponse {
             font-weight: bold;
             font-size: 16pt;
         }
@@ -55,8 +57,11 @@
 <hr/>
 <div id="loginResponse"></div>
 <div id="tokenPane">
-<div id="tokenGreeting">Congratulations! You have all the rights and privileges awarded to holders of the DiLTy token!</div>
-<div><img id="tokenImage" /></div>
+    <div id="tokenGreeting">Congratulations! You have all the rights and privileges awarded to holders of the DiLTy
+        token!
+    </div>
+    <div id="tokenLevel">Your level is: <span id="levelId"></span></div>
+    <div><img id="tokenImage"/></div>
 </div>
 <div id="profile">
     <h2>Profile information</h2>

@@ -119,6 +119,7 @@ async function loginWithMetaMask() {
                 if(tokenUriJson){
                     document.getElementById("tokenImage").src = tokenUriJson.image;
                     document.getElementById("tokenGreeting").style.visibility = "visible";
+                    document.getElementById("levelId").innerText = tokenUriJson.level;
                 }
                 if (!profile) {
                     document.getElementById("loginResponse").innerHTML = `Logged in at address ${address}.<br />Please enter your profile information:`;

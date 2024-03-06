@@ -74,7 +74,7 @@ CONTRACT_NAME=<CONTRACT_NAME> npx hardhat run scripts/deploy-dilty.js --network 
 
 Example:
 ```bash
-CONTRACT_NAME=Dilty07 npx hardhat run scripts/deploy-dilty.js --network sepolia
+CONTRACT_NAME=Dilty09 npx hardhat run scripts/deploy-dilty.js --network sepolia
 ```
 You'll get output similar to the following: 
 
@@ -115,7 +115,7 @@ WHERE:
 
 Example:
 ```bash 
-CONTRACT_NAME=Dilty07 npx hardhat run scripts/extract-dilty-abi.js --network sepolia
+CONTRACT_NAME=Dilty09 npx hardhat run scripts/extract-dilty-abi.js --network sepolia
 ```
 
 You'll get output similar to the following: 
@@ -132,9 +132,9 @@ Run the following command to upload an image to IPFS:
 ```bash
 npx hardhat \
   diltyUploadPngToIpfsPinata \
-  --asset-name "Big Pink Dot" \
-  --asset-description "A Very Big Pink Dot" \
-  --image-file-path "./tasks/images/pink-dot.png" \
+  --asset-name "Pink Dilty" \
+  --asset-description "A Very Cool Pink Dilty" \
+  --image-file-path "./tasks/images/d-pink.png" \
   --show-stack-traces
 ```
 
