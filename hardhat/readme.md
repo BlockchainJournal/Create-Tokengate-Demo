@@ -174,6 +174,8 @@ You'll use the `imageCid` value generated when you ran the `hardhat` task `dilty
 
 # Minting and transferring the NFT to a user
 
+The command that follows will mint and transfer the NFT to a user. Be advised that the logic in the underlying contract that supports NFT creation and minting is such that it will only mint one NFT to the given user. If you attempt to mint more than one NFT, the contract will return the NFT previously minted and transferred to the user.
+
 Run the following command to mint and transfer the NFT to a user:
 
 ```bash
